@@ -9,7 +9,7 @@ import {
     CardActionArea,
     CardActions,
     CardHeader,
-    FormControl, Input, InputLabel,
+    FormControl, Input, InputLabel, OutlinedInput,
     TextField
 } from "@mui/material";
 
@@ -25,51 +25,63 @@ const HomePage = () => {
         <div className={styles.container} >
             <div className={styles.box}>
                 <Box>
-                    <Card variant="outlined">
+                    <Card>
                         {
                             isLogin ?
                                 <CardActionArea>
-                                    <div>
-                                        <FormControl
-                                            variant={"standard"}
-                                        >
-                                            <InputLabel
-                                                htmlFor={"standard-adornment-password"}
+                                    <Box
+                                        component="form"
+                                        noValidate
+                                        autoComplete="off"
+                                    >
+                                        <div>
+                                            <FormControl
+                                                variant={"standard"}
+                                                sx={{ m: 1}}
                                             >
-                                                邮箱
-                                            </InputLabel>
-                                            <Input
-                                                id="standard-adornment-email"
-                                                onChange={(event)=>setEmail(event.target.value)}
-                                            >
+                                                <InputLabel
+                                                    htmlFor={"standard-adornment-password"}
+                                                >
+                                                    邮箱
+                                                </InputLabel>
+                                                <OutlinedInput
+                                                    id="standard-adornment-email"
+                                                    onChange={(event)=>setEmail(event.target.value)}
+                                                >
 
-                                            </Input>
-                                        </FormControl>
-                                    </div>
-                                    <div>
-
-                                        <FormControl
-                                            variant={"standard"}
-                                        >
-                                            <InputLabel
-                                                htmlFor={"standard-adornment-password"}
+                                                </OutlinedInput>
+                                            </FormControl>
+                                        </div>
+                                        <div>
+                                            <FormControl
+                                                variant={"standard"}
+                                                sx={{ m: 1}}
                                             >
-                                                密码
-                                            </InputLabel>
-                                            <Input
-                                                id="standard-adornment-password"
-                                                type="password"
-                                                onChange={(event)=>setPassword(event.target.value)}
-                                            >
+                                                <InputLabel
+                                                    htmlFor={"standard-adornment-password"}
+                                                >
+                                                    密码
+                                                </InputLabel>
+                                                <OutlinedInput
+                                                    id="standard-adornment-password"
+                                                    type="password"
+                                                    onChange={(event)=>setPassword(event.target.value)}
+                                                >
 
-                                            </Input>
-                                        </FormControl>
-                                    </div>
-                                    <div className={"align"}>
-                                        <FormControl>
-                                            <Button onClick={()=>login()}>确认</Button>
-                                        </FormControl>
-                                    </div>
+                                                </OutlinedInput>
+                                            </FormControl>
+                                        </div>
+                                        <div className={"align"}>
+                                            <FormControl
+                                                sx={{ m: 1}}
+                                            >
+                                                <Button
+                                                    onClick={()=>login()}
+                                                    variant="outlined"
+                                                >确认</Button>
+                                            </FormControl>
+                                        </div>
+                                    </Box>
                                 </CardActionArea>
                                 :
                                 <CardActionArea>

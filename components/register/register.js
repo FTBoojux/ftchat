@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Avatar,
     Box,
     Button,
     FormControl,
     FormGroup,
-    Input,
-    InputLabel,
+    Input, InputBase,
+    InputLabel, Paper,
 } from '@mui/material';
 
 const Register = () => {
@@ -16,19 +16,35 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [avatarUrl,setAvatarUrl] = useState('');
-
+    const [sendBtnText,setSendBtnText] = useState('发送');
+    const [cooldown, setCooldown] = useState(0);
+    useEffect(() => {
+        let timer;
+        if (cooldown > 0) {
+            timer = setTimeout(() => {
+                setCooldown(cooldown - 1);
+            }, 1000);
+        }
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [cooldown]);
     const handleRequestVerificationCode = async () => {
-        const response = await fetch('/api/account/request_verification_code/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-            }),
-        });
-        const result = await response.json();
-        console.log(result);
+        if (cooldown === 0) {
+            // 在这里执行您的发送验证码操作
+            const response = await fetch('/api/account/request_verification_code/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                }),
+            });
+            const result = await response.json();
+            setCooldown(60);
+
+        }
     };
 
     const handleUploadAvatar = async (e) => {
@@ -64,9 +80,9 @@ const Register = () => {
 
     return (
         <Box>
-                    <Box>
-                        <Avatar className={'align'} alt={"头像"} src={avatarUrl}></Avatar>
-                    </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Avatar alt={"头像"} src={avatarUrl}></Avatar>
+            </Box>
             <FormGroup>
                 <FormControl>
                     <Input
@@ -104,19 +120,27 @@ const Register = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                 </FormControl>
-                <FormControl>
-                    <InputLabel>验证码</InputLabel>
-                    <Input
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
-                    />
-                </FormControl>
+                    {/*<InputLabel>验证码</InputLabel>*/}
+                    {/*<Input*/}
+                    {/*    value={verificationCode}*/}
+                    {/*    onChange={(e) => setVerificationCode(e.target.value)}*/}
+                    {/*/>*/}
             </FormGroup>
+            <Box>
+                <Paper
+                    component="form"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}
+                >
+                    <InputBase placeholder={"邮箱验证码"}></InputBase>
+                    <Button variant="contained">{cooldown === 0 ? sendBtnText : `${cooldown}秒后可重发`}</Button>
+                </Paper>
+            </Box>
             <Box className={'align'} >
-                <Button onClick={handleRequestVerificationCode}>
-                    发送验证码
-                </Button>
+                {/*<Button onClick={handleRequestVerificationCode}>*/}
+                {/*    发送验证码*/}
+                {/*</Button>*/}
                 <Button onClick={handleRegister}>注册</Button>
+
             </Box>
         </Box>
     );

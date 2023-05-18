@@ -78,7 +78,7 @@ const Register = () => {
             }),
         });
         const result = await response.json();
-        setMsg(result.data)
+        setMsg(result.message)
         setShowRegisterRes(true)
     };
 

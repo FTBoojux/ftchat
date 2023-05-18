@@ -6,7 +6,7 @@ import {
     FormControl,
     FormGroup,
     Input, InputBase,
-    InputLabel, Paper,
+    InputLabel, Paper, Snackbar,
 } from '@mui/material';
 
 const Register = () => {
@@ -18,6 +18,8 @@ const Register = () => {
     const [avatarUrl,setAvatarUrl] = useState('');
     const [sendBtnText,setSendBtnText] = useState('发送');
     const [cooldown, setCooldown] = useState(0);
+    const [showRegisterRes,setShowRegisterRes] = useState(false);
+    const [msg, setMsg] = useState("");
     useEffect(() => {
         let timer;
         if (cooldown > 0) {
@@ -42,6 +44,7 @@ const Register = () => {
                 }),
             });
             const result = await response.json();
+            console.log(result)
             setCooldown(60);
 
         }
@@ -75,11 +78,19 @@ const Register = () => {
             }),
         });
         const result = await response.json();
-        console.log(result);
+        setMsg(result.data)
+        setShowRegisterRes(true)
     };
 
     return (
         <Box>
+            <Snackbar
+                open={showRegisterRes}
+                autoHideDuration={6000}
+                onClose={()=>{setShowRegisterRes(false)}}
+                message={msg}
+                // action={action}
+            ></Snackbar>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Avatar alt={"头像"} src={avatarUrl}></Avatar>
             </Box>
@@ -131,8 +142,14 @@ const Register = () => {
                     component="form"
                     sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}
                 >
-                    <InputBase placeholder={"邮箱验证码"}></InputBase>
-                    <Button variant="contained">{cooldown === 0 ? sendBtnText : `${cooldown}秒后可重发`}</Button>
+                    <InputBase
+                        placeholder={"邮箱验证码"}
+                        onChange={(e)=>setVerificationCode(e.target.value)}
+                    ></InputBase>
+                    <Button
+                        variant="contained"
+                        onClick={()=>handleRequestVerificationCode()}
+                    >{cooldown === 0 ? sendBtnText : `${cooldown}秒后可重发`}</Button>
                 </Paper>
             </Box>
             <Box className={'align'} >

@@ -4,12 +4,32 @@ import {
     Button,
     FormControl, InputLabel, OutlinedInput,
 } from "@mui/material";
+import { tauri } from '@tauri-apps/api'
 const Login = () => {
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
-    const login = ()=>{
-        console.log("email",email)
-        console.log("password",password)
+    const user_login = ()=>{
+        fetch('/api/account/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password:password
+            }),
+        })
+        .then(response => response.json())
+        .then(async data => {
+            console.log('Success:', data);
+            if(data.code === 200){
+                tauri.app.invoke('plugin:storage|write', { key: 'access_token', value: 'your_token_value' }) // Store token
+                window.location.href = "/home"
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     }
     return (
         <Box
@@ -38,7 +58,7 @@ const Login = () => {
             </Box>
             <Box className={"align"}>
               <FormControl sx={{ m: 1 }}>
-                <Button onClick={() => login()} variant="outlined">
+                <Button onClick={() => user_login()} variant="outlined">
                   登录
                 </Button>
               </FormControl>

@@ -4,10 +4,14 @@ import {
     Button,
     FormControl, InputLabel, OutlinedInput,
 } from "@mui/material";
-import { tauri } from '@tauri-apps/api'
 const Login = () => {
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
+    const [open, setOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const handleClose = () => {
+        setOpen(false);
+    };
     const user_login = ()=>{
         fetch('/api/account/login/', {
             method: 'POST',
@@ -23,8 +27,11 @@ const Login = () => {
         .then(async data => {
             console.log('Success:', data);
             if(data.code === 200){
-                tauri.app.invoke('plugin:storage|write', { key: 'access_token', value: 'your_token_value' }) // Store token
-                window.location.href = "/home"
+                window.localStorage.setItem('access_token', data.data.access_token);        
+                window.location.href = "/main"
+            }else {
+                setErrorMessage(data.message);
+                setOpen(true);
             }
         })
         .catch((error) => {

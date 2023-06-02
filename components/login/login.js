@@ -3,7 +3,9 @@ import {
     Box,
     Button,
     FormControl, InputLabel, OutlinedInput,
+    Snackbar
 } from "@mui/material";
+import MuiAlert from '@mui/material/Alert';
 const Login = () => {
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
@@ -70,7 +72,12 @@ const Login = () => {
                 </Button>
               </FormControl>
             </Box>
-          </Box>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="error">
+                {errorMessage}
+                </MuiAlert>
+            </Snackbar>
+        </Box>
     );
 }
 

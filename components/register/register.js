@@ -8,6 +8,7 @@ import {
     Input, InputBase,
     InputLabel, Paper, Snackbar,
 } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 const Register = () => {
     const [username, setUsername] = useState('')
@@ -20,6 +21,9 @@ const Register = () => {
     const [cooldown, setCooldown] = useState(0);
     const [showRegisterRes,setShowRegisterRes] = useState(false);
     const [msg, setMsg] = useState("");
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     useEffect(() => {
         let timer;
         if (cooldown > 0) {
@@ -31,24 +35,38 @@ const Register = () => {
             clearTimeout(timer);
         };
     }, [cooldown]);
+    
+    const handleClose = () => {
+        setSuccessOpen(false);
+        setErrorOpen(false);
+      };
+    
     const handleRequestVerificationCode = async () => {
         if (cooldown === 0) {
-            // 在这里执行您的发送验证码操作
-            const response = await fetch('/api/account/request_verification_code/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                }),
-            });
-            const result = await response.json();
-            console.log(result)
-            setCooldown(60);
-
-        }
-    };
+            try {
+                const response = await fetch('/api/account/request_verification_code/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                    }),
+                });
+                const data = await response.json();
+                console.log('Success:', data);
+                if (data.code === 200) {
+                    setCooldown(60);
+                    setSuccessOpen(true);
+                } else {
+                    setErrorMessage(data.message);
+                    setErrorOpen(true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+    }
+  };
 
     const handleUploadAvatar = async (e) => {
         const formData = new FormData();
@@ -157,8 +175,17 @@ const Register = () => {
                 {/*    发送验证码*/}
                 {/*</Button>*/}
                 <Button onClick={handleRegister}>注册</Button>
-
             </Box>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="success">
+                验证码已发送到您的邮箱，请注意查收。
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleClose}>
+                <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="error">
+                {errorMessage}
+                </MuiAlert>
+            </Snackbar>
         </Box>
     );
 };

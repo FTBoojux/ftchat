@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, {useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -16,7 +16,6 @@ import Settings from '../settings/page';
 const drawerWidth = 40;
 
 const Main = () => {
-    // 定义一个可以接受路径并变化颜色的图标组件
   const ColoredIcon = ({ to, children }) => {
     const location = useLocation();
 

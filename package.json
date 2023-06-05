@@ -8,7 +8,8 @@
     "export": "next export",
     "start": "next start",
     "tauri": "tauri",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tauri dev":"tauri dev"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",

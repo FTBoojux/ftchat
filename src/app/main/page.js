@@ -5,15 +5,14 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { BrowserRouter as Router, Route, Link, Routes, NavLink, useLocation} from 'react-router-dom';
+import { HashRouter as Router, Route, Link, Routes, NavLink, useLocation} from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 // Here are your pages
-const Messages = () => <div>Messages</div>;
-const Contacts = () => <div>Contacts</div>;
-const Settings = () => <div>Settings</div>;
-
+import Message from '../message/page';
+import Contacts from '../contacts/page';
+import Settings from '../settings/page';
 const drawerWidth = 40;
 
 const Main = () => {
@@ -37,15 +36,15 @@ const Main = () => {
           sx={{
             width: drawerWidth,
             flexShrink: 0,
-            // '& .MuiDrawer-paper': {
-            //   width: drawerWidth
-            //   // boxSizing: 'border-box',
-            // },
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
           }}
         >
           <List>
-            <ListItem button component={NavLink} to="/messages">
-              <ColoredIcon to="/messages">
+            <ListItem button component={NavLink} to="/message">
+              <ColoredIcon to="/message">
                 <ChatIcon />
               </ColoredIcon>
             </ListItem>
@@ -65,7 +64,7 @@ const Main = () => {
           sx={{ flexGrow: 1, p: 3 }}
           >
           <Routes>
-            <Route path="/messages" element={<Messages />} />
+            <Route path="/message" element={<Message />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>

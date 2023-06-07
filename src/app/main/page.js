@@ -9,10 +9,12 @@ import { HashRouter as Router, Route, Link, Routes, NavLink, useLocation} from '
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 // Here are your pages
 import Message from '../message/page';
 import Contacts from '../contacts/page';
 import Settings from '../settings/page';
+import Gpt from '../gpt/page';
 const drawerWidth = 40;
 
 const Main = () => {
@@ -42,6 +44,11 @@ const Main = () => {
           }}
         >
           <List>
+            <ListItem button component={NavLink} to="/gpt">
+              <ColoredIcon to="/gpt">
+                <SmartToyIcon />
+              </ColoredIcon>
+            </ListItem>
             <ListItem button component={NavLink} to="/message">
               <ColoredIcon to="/message">
                 <ChatIcon />
@@ -66,6 +73,7 @@ const Main = () => {
             <Route path="/message" element={<Message />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/gpt" element={<Gpt />} />
           </Routes>
         </Box>
       </Box>

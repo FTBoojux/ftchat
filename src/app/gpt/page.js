@@ -1,0 +1,92 @@
+import React, {useState} from 'react';
+import { Box, Select, MenuItem, TextField ,Button, List, ListItem, ListItemText } from '@mui/material';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
+import MyFetch from '../api/MyFetch';
+
+const Gpt = () => {
+    const [model, setModel] = useState('gpt-3.5-turbo');
+    const [message, setMessage] = useState('');
+    const [chatLog, setChatLog] = useState([]);
+
+    const handleModelChange = (event) => {
+        setModel(event.target.value);
+    };
+
+    const handleMessageChange = (event) => {
+        setMessage(event.target.value);
+    };
+  
+    const handleSendMessage = async () => {
+        try {
+            const response = await MyFetch('http://localhost:8000/gpt/chat/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    model: model,
+                    message: message,
+                }),
+                // 超时时间设置为两分钟
+                timeout: 180000,
+            });
+
+            const data = await response.json();
+
+            if (data.result === "success") {
+                setChatLog([...chatLog, {role: 'user', content: message}, {role: 'bot', content: data.message}]);
+            }
+
+            setMessage('');
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100vh',
+                padding: '20px',
+            }}
+        >
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Select
+                    labelId="model-select-label"
+                    id="model-select"
+                    value={model}
+                    label="Select Model"
+                    onChange={handleModelChange}
+                >
+                    <MenuItem value={'gpt-3.5-turbo'}>GPT-3.5 Turbo</MenuItem>
+                    <MenuItem value={'gpt-4'}>GPT-4</MenuItem>
+                </Select>
+            </Box>
+            <Box>
+                <List>
+                    {chatLog.map((chat, index) => (
+                        <ListItem key={index}>
+                            <ListItemText primary={chat.role === 'user' ? `You: ${chat.content}` : `Bot: ${chat.content}`} />
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '100px'}}>
+                <TextareaAutosize
+                    id="message-input"
+                    label="输入您的消息"
+                    value={message}
+                    onChange={handleMessageChange}
+                    sx={{ width: '80%' }}
+                />
+                <Button variant="contained" onClick={handleSendMessage} sx={{
+                    height: '50px',
+                }}>
+                    发送
+                </Button>
+            </Box>
+        </Box>
+    );
+};
+
+export default Gpt;

@@ -5,8 +5,8 @@ export default async function MyFetch(url, options = {}) {
             'Content-Type': 'application/json',
         },
     };
-
-    const token = await tauri.app.invoke('plugin:storage|read', { key: 'access_token' });
+    const token = localStorage.getItem('access_token');
+    // const token = await tauri.app.invoke('plugin:storage|read', { key: 'access_token' });
 
     if (token) {
         defaultOptions.headers['Authorization'] = `Bearer ${token}`;

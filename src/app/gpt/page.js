@@ -1,12 +1,17 @@
 import React, {useState} from 'react';
-import { Box, Select, MenuItem, TextField ,Button, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText } from '@mui/material';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MyFetch from '../api/MyFetch';
+import Showdown from 'showdown';
+
 
 const Gpt = () => {
     const [model, setModel] = useState('gpt-3.5-turbo');
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState([]);
+
+    const converter = new Showdown.Converter();
+
 
     const handleModelChange = (event) => {
         setModel(event.target.value);
@@ -16,6 +21,10 @@ const Gpt = () => {
         setMessage(event.target.value);
     };
   
+    const convertMdToHtml = (md) => {
+        return <div dangerouslySetInnerHTML={{__html:md}} ></div>
+    }
+
     const handleSendMessage = async () => {
         try {
             const response = await MyFetch('http://localhost:8000/gpt/chat/', {
@@ -29,8 +38,13 @@ const Gpt = () => {
             });
 
             const data = await response.json();
-
+            // message = 
             if (data.result === "success") {
+
+                // message = converter.makeHtml(message);
+                setMessage(converter.makeHtml(message));
+                data.message = converter.makeHtml(data.message);
+
                 setChatLog([...chatLog, {role: 'user', content: message}, {role: 'bot', content: data.message}]);
             }
 
@@ -63,13 +77,19 @@ const Gpt = () => {
                 </Select>
             </Box>
             <Box>
-                <List>
-                    {chatLog.map((chat, index) => (
-                        <ListItem key={index}>
-                            <ListItemText primary={chat.role === 'user' ? `You: ${chat.content}` : `Bot: ${chat.content}`} />
-                        </ListItem>
-                    ))}
-                </List>
+            <List>
+                {chatLog.map((chat, index) => (
+                    <ListItem key={index}>
+                        <Box>
+                            <Typography variant="body1">
+                                {chat.role === 'user' ? `You: ${chat.content}` : `Bot: `}
+                            </Typography>
+                            {chat.role === 'bot' && convertMdToHtml(chat.content)}
+                        </Box>
+                    </ListItem>
+                ))}
+            </List>
+
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '100px'}}>
                 <TextareaAutosize

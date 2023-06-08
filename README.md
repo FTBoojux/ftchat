@@ -1,3 +1,13 @@
+## FTChat
+
+这是一个用于个人学习使用的聊天应用，当前正在逐步设计和开发中。
+
+本项目网页端基于Next.js框架，使用Tauri框架打包为桌面应用。
+
+对应的后端程序：[FTChat-backend](https://github.com/FTBoojux/ftchat_backend)
+
+以下内容为Next.js框架原生内容：
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

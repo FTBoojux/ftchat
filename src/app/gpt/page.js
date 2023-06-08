@@ -86,14 +86,16 @@ const Gpt = () => {
             </List>
 
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '100px'}}>
-                <TextareaAutosize
-                    id="message-input"
-                    label="输入您的消息"
-                    value={message}
-                    onChange={handleMessageChange}
-                    sx={{ width: '80%' }}
-                />
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '50px'}}>
+                <Box sx={{ width: '80%', marginRight: '20px'}}>
+                    <TextareaAutosize
+                        id="message-input"
+                        label="输入您的消息"
+                        value={message}
+                        onChange={handleMessageChange}
+                        style={{ width: '100%', height: '50px' }}
+                    />
+                </Box>
                 <Button variant="contained" onClick={handleSendMessage} sx={{
                     height: '50px',
                 }}>

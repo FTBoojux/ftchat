@@ -3,14 +3,13 @@ import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MyFetch from '../api/MyFetch';
 import Showdown from 'showdown';
+import OmsViewMarkdown from '../../../components/markdown/MarkdownViewer';
 
 
 const Gpt = () => {
     const [model, setModel] = useState('gpt-3.5-turbo');
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState([]);
-
-    const converter = new Showdown.Converter();
 
 
     const handleModelChange = (event) => {
@@ -20,10 +19,6 @@ const Gpt = () => {
     const handleMessageChange = (event) => {
         setMessage(event.target.value);
     };
-  
-    const convertMdToHtml = (md) => {
-        return <div dangerouslySetInnerHTML={{__html:md}} ></div>
-    }
 
     const handleSendMessage = async () => {
         try {
@@ -33,7 +28,7 @@ const Gpt = () => {
                     model: model,
                     message: message,
                 }),
-                // 超时时间设置为两分钟
+                // 超时时间设置为三分钟
                 timeout: 180000,
             });
 
@@ -42,8 +37,8 @@ const Gpt = () => {
             if (data.result === "success") {
 
                 // message = converter.makeHtml(message);
-                setMessage(converter.makeHtml(message));
-                data.message = converter.makeHtml(data.message);
+                // setMessage(converter.makeHtml(message));
+                // data.message = converter.makeHtml(data.message);
 
                 setChatLog([...chatLog, {role: 'user', content: message}, {role: 'bot', content: data.message}]);
             }
@@ -84,7 +79,7 @@ const Gpt = () => {
                             <Typography variant="body1">
                                 {chat.role === 'user' ? `You: ${chat.content}` : `Bot: `}
                             </Typography>
-                            {chat.role === 'bot' && convertMdToHtml(chat.content)}
+                            {chat.role === 'bot' && <OmsViewMarkdown textContent={chat.content} darkMode /> }
                         </Box>
                     </ListItem>
                 ))}

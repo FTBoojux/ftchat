@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
     Box,
     Button,
@@ -16,6 +16,12 @@ import Register from "../../components/register/register";
 import Login from "../../components/login/login";
 const HomePage = () => {
     const [isLogin, setIsLogin] = useState(true);
+    useEffect(()=>{
+        const access_token = window.localStorage.getItem('access_token')
+        if(access_token){
+            window.location.href = "/main"
+        }
+    },[])
     const LoginBox = ()=>{
         if(isLogin){
             return <Login></Login>

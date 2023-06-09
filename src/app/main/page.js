@@ -11,10 +11,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 // Here are your pages
-import Message from '../message/page';
-import Contacts from '../contacts/page';
-import Settings from '../settings/page';
-import Gpt from '../gpt/page';
+import Message from './message/page';
+import Contacts from './contacts/page';
+import Settings from './settings/page';
+import Gpt from './gpt/page';
 const drawerWidth = 40;
 
 const Main = () => {
@@ -44,23 +44,23 @@ const Main = () => {
           }}
         >
           <List>
-            <ListItem button component={NavLink} to="/gpt">
-              <ColoredIcon to="/gpt">
+            <ListItem button component={NavLink} to="/main/gpt">
+              <ColoredIcon to="/main/gpt">
                 <SmartToyIcon />
               </ColoredIcon>
             </ListItem>
-            <ListItem button component={NavLink} to="/message">
-              <ColoredIcon to="/message">
+            <ListItem button component={NavLink} to="/main/message">
+              <ColoredIcon to="/main/message">
                 <ChatIcon />
               </ColoredIcon>
             </ListItem>
-            <ListItem button component={NavLink} to="/contacts">
-              <ColoredIcon to="/contacts">
+            <ListItem button component={NavLink} to="/main/contacts">
+              <ColoredIcon to="/main/contacts">
                 <PersonIcon />
               </ColoredIcon>
             </ListItem>
-            <ListItem button component={NavLink} to="/settings">
-              <ColoredIcon to="/settings">
+            <ListItem button component={NavLink} to="/main/settings">
+              <ColoredIcon to="/main/settings">
                 <SettingsIcon />
               </ColoredIcon>
             </ListItem>
@@ -70,10 +70,10 @@ const Main = () => {
           sx={{ flexGrow: 1, p: 3 }}
           >
           <Routes>
-            <Route path="/message" element={<Message />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/gpt" element={<Gpt />} />
+            <Route path="/main/message" element={<Message />} />
+            <Route path="/main/contacts" element={<Contacts />} />
+            <Route path="/main/settings" element={<Settings />} />
+            <Route path="/main/gpt" element={<Gpt />} />
           </Routes>
         </Box>
       </Box>

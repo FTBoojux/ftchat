@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText } from '@mui/material';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import MyFetch from '../api/MyFetch';
+import MyFetch from '../../api/MyFetch';
 import Showdown from 'showdown';
-import OmsViewMarkdown from '../../../components/markdown/MarkdownViewer';
+import OmsViewMarkdown from '../../../../components/markdown/MarkdownViewer';
 
 
 const Gpt = () => {

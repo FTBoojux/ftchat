@@ -1,5 +1,6 @@
+"use client";
 import React from 'react';
-import { Box, TextField, Button, Container } from '@mui/material';
+import { Box, TextField, Button, Container, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
@@ -7,20 +8,55 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import DirectionsIcon from '@mui/icons-material/Directions';
+import MyFetch from '@/app/api/MyFetch';
+import UserList from '../../../../components/contacts/UserList';
 const Contracts = () => {
     const [searchText, setSearchText] = React.useState('');
+    const [friends, setFriends] = React.useState([]);
+    const [strangers, setStrangers] = React.useState([]);
 
+    React.useEffect(() => {
+        console.log(`You are searching for: ${searchText}`);
+        searchFriends()
+    }, []);
     const handleChange = (event) => {
         setSearchText(event.target.value);
     };
 
     const handleSearch = () => {
-        console.log(`Searching for: ${searchText}`);
+      console.log('clicked!');
         // 在这里添加你的搜索逻辑
+        searchStrangers()
     };
 
+    const searchFriends =  () => {
+      MyFetch(`/api/account/friends/?keyword=${searchText}`, {
+        method: 'GET',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        console.log('data',data);
+        setFriends(data.data)
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
+
+    const searchStrangers = () => {
+      MyFetch(`/api/account/strangers/?keyword=${searchText}`, {
+        method: 'GET',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        console.log(data);
+        setStrangers(data.data);
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
+
     return (
-        <div>
+        <Box>
           <Container
             fixed
           >
@@ -35,13 +71,44 @@ const Contracts = () => {
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="搜索联系人"
                 inputProps={{ 'aria-label': 'search google maps' }}
+                value={searchText}
+                onChange={(event)=>handleChange(event)}
               />
-              <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                <SearchIcon />
+              <IconButton 
+                type="button" 
+                sx={{ p: '10px' }} 
+                aria-label="search"
+                onClick={()=>handleSearch()}
+                >
+                <SearchIcon/>
               </IconButton>
             </Paper>
           </Container>
-        </div>
+          <Container>
+            <Box>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                好友
+              </Typography>
+              {
+                friends.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
+              }
+              {
+                friends.length !== 0 && <UserList users={friends} type={1} />
+              }
+            </Box>
+            <Box>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                陌生人
+              </Typography>
+              {
+                strangers.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
+              }
+              {
+                strangers.length !== 0 && <UserList users={strangers} type={2} />
+              }
+            </Box>
+          </Container>
+        </Box>
     );
 };
 

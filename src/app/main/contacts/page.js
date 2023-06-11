@@ -93,7 +93,7 @@ const Contracts = () => {
                 friends.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
               }
               {
-                friends.length !== 0 && <UserList users={friends} type={1} />
+                friends.length !== 0 && <UserList users={friends} handleType={1} />
               }
             </Box>
             <Box>
@@ -104,7 +104,7 @@ const Contracts = () => {
                 strangers.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
               }
               {
-                strangers.length !== 0 && <UserList users={strangers} type={2} />
+                strangers.length !== 0 && <UserList users={strangers} handleType={2} />
               }
             </Box>
           </Container>

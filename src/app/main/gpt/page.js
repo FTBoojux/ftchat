@@ -4,6 +4,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MyFetch from '../../api/MyFetch';
 import OmsViewMarkdown from '../../../../components/markdown/MarkdownViewer';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Gpt = () => {
     const [model, setModel] = useState('gpt-3.5-turbo');
@@ -15,6 +16,8 @@ const Gpt = () => {
     const [snackMessage, setSnackMessage] = React.useState('会话不存在！');
     const [openDialog, setOpenDialog] = useState(false);
     const [newConversationTitle, setNewConversationTitle] = useState('');
+    const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
+    const [removeConversationId, setRemoveConversationId] = useState('');
 
     React.useEffect(() => {
         fetchConversation();
@@ -97,6 +100,34 @@ const Gpt = () => {
             console.log(err);
         }
     };
+
+    const handleRemoveConversation = () => {
+        MyFetch('api/gpt/conversation/', {
+            method: 'DELETE',
+            body: JSON.stringify({
+                conversation_id: removeConversationId,
+            }),
+        }).then(response=>response.json())
+        .then((data) => {
+            if (data.result === "success") {
+                setSnackMessage("删除成功！");
+                setOpen(true);
+                fetchConversation();
+            }
+            setOpenRemoveDialog(false);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+    }
+
+    const handleConversationRemoveClick = (event,index) => {
+        // 组织事件冒泡
+        event.stopPropagation();
+        setRemoveConversationId(conversation[index].conversation_id);
+        setOpenRemoveDialog(true);
+    }
+
     return (
         <Box
             sx={{
@@ -132,6 +163,9 @@ const Gpt = () => {
                                             }}
                                         >
                                             <ListItemText primary={item.title} />
+                                            <ListItemIcon onClick={(e)=>{handleConversationRemoveClick(e,index)}} >
+                                                <DeleteIcon />
+                                            </ListItemIcon>
                                         </ListItem>
                                         <Divider />
                                     </>
@@ -199,16 +233,26 @@ const Gpt = () => {
             </Box>
             <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)} message={snackMessage} />
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                        <DialogTitle>创建会话</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>请输入新会话的名称</DialogContentText>
-                            <TextField autoFocus margin="dense" label="名称" fullWidth value={newConversationTitle} onChange={(event) => setNewConversationTitle(event.target.value)} />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setOpenDialog(false)}>取消</Button>
-                            <Button onClick={handleCreateConversation}>创建</Button>
-                        </DialogActions>
-                    </Dialog>
+                <DialogTitle>创建会话</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>请输入新会话的名称</DialogContentText>
+                    <TextField autoFocus margin="dense" label="名称" fullWidth value={newConversationTitle} onChange={(event) => setNewConversationTitle(event.target.value)} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>取消</Button>
+                    <Button onClick={() => handleCreateConversation()}>创建</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={openRemoveDialog} onClose={() => setOpenRemoveDialog(false)}>
+                <DialogTitle>移除会话</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>确定要移除此会话吗？</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenRemoveDialog(false)}>取消</Button>
+                    <Button onClick={() => handleRemoveConversation()}>确认</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

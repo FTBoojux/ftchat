@@ -55,6 +55,7 @@ const Gpt = () => {
                 body: JSON.stringify({
                     model: model,
                     message: message,
+                    conversation_id: selectedConversation,
                 }),
                 // 超时时间设置为三分钟
                 timeout: 180000,
@@ -128,6 +129,22 @@ const Gpt = () => {
         setOpenRemoveDialog(true);
     }
 
+    const handleConversationChange = (conversation_id) => {
+        setSelectedConversation(conversation_id);
+        setChatLog([]);
+        MyFetch(`api/gpt/chat/?conversation_id=${conversation_id}`, {
+            method: 'GET',
+        }).then(response=>response.json())
+        .then((data) => {
+            if (data.result === "success") {
+                setChatLog(data.data);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+    }
+
     return (
         <Box
             sx={{
@@ -159,7 +176,7 @@ const Gpt = () => {
                                             key={index}
                                             selected={selectedConversation === item.conversation_id}
                                             onClick={() => {
-                                                setSelectedConversation(item.conversation_id);
+                                                handleConversationChange(item.conversation_id);
                                             }}
                                         >
                                             <ListItemText primary={item.title} />

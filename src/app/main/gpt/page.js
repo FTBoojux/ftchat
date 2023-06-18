@@ -18,6 +18,7 @@ const Gpt = () => {
     const [newConversationTitle, setNewConversationTitle] = useState('');
     const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
     const [removeConversationId, setRemoveConversationId] = useState('');
+    const [nextPagingState, setNextPagingState] = useState(0);
 
     React.useEffect(() => {
         fetchConversation();
@@ -38,6 +39,25 @@ const Gpt = () => {
         .then((data) => {
             console.log(data);
             setConversation(data.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+    }
+
+    const fetchMoreMessages = (conversation_id, paging_state) => {
+        let url = `api/gpt/chat/?conversation_id=${conversation_id}`;
+        if (paging_state) {
+            url += `&paging_state=${encodeURIComponent(paging_state)}`;
+        }
+        MyFetch(url, {
+            method: 'GET',
+        }).then(response=>response.json())
+        .then((data) => {
+            if (data.result === "success") {
+                setChatLog(chatLog => [...data.data,...chatLog]);
+                setNextPagingState(data.next_paging_state);
+            }
         })
         .catch((error) => {
             console.error(error);
@@ -130,20 +150,18 @@ const Gpt = () => {
     }
 
     const handleConversationChange = (conversation_id) => {
+        setNextPagingState(null)
         setSelectedConversation(conversation_id);
         setChatLog([]);
-        MyFetch(`api/gpt/chat/?conversation_id=${conversation_id}`, {
-            method: 'GET',
-        }).then(response=>response.json())
-        .then((data) => {
-            if (data.result === "success") {
-                setChatLog(data.data);
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-        })
+        fetchMoreMessages(conversation_id, null);
     }
+
+    const handleScroll = (event) => {
+        const target = event.target;
+        if (target.scrollTop === 0) {
+            fetchMoreMessages(selectedConversation, nextPagingState);
+        }
+    };
 
     return (
         <Box
@@ -224,8 +242,8 @@ const Gpt = () => {
                         <MenuItem value={'gpt-4'}>GPT-4</MenuItem>
                     </Select>
                 </Box>
-                <Box sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
-                    <List>
+                <Box sx={{ flex: '1 1 auto', overflowY: 'auto' }} onScroll={handleScroll}>
+                    <List >
                         {chatLog.map((chat, index) => (
                             <ListItem key={index}>
                                 <Box>

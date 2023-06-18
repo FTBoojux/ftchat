@@ -31,7 +31,6 @@ const OmsViewMarkdown = (props) => {
                     navigator.clipboard.writeText(children);
                 }
             }
-            console.log('match', children);
             return !inline && match ? (
                 <Box>
                     <Box

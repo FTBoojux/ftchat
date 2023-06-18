@@ -158,7 +158,7 @@ const Gpt = () => {
 
     const handleScroll = (event) => {
         const target = event.target;
-        if (target.scrollTop === 0) {
+        if (target.scrollTop === 0 && nextPagingState != null) {
             fetchMoreMessages(selectedConversation, nextPagingState);
         }
     };

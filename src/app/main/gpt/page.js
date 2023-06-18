@@ -155,7 +155,13 @@ const Gpt = () => {
         >
             <Box
                 sx={{
+                    position: 'fixed', // 添加此属性以固定左侧面板
+                    top: 0, // 与屏幕顶部对齐
                     width: '25%',
+                    minWidth: '160px',
+                    height: '100%', // 设置高度以撑满整个屏幕高度
+                    overflowY: 'auto', // 当会话列表过长时添加滚动条
+                    zIndex: 10, // 确保左侧面板始终显示在其他元素上方
                 }}
             >
                 <Box>
@@ -201,7 +207,8 @@ const Gpt = () => {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     height: '100vh',
-                    padding: '20px',
+                    paddingLeft: 'calc(25% + 8px)', // 让内容从左侧面板的分隔线开始
+                    paddingRight: '8px',
                     flexGrow: 1,
                 }}
             >
@@ -217,7 +224,7 @@ const Gpt = () => {
                         <MenuItem value={'gpt-4'}>GPT-4</MenuItem>
                     </Select>
                 </Box>
-                <Box>
+                <Box sx={{ flex: '1 1 auto', overflowY: 'auto' }}>
                     <List>
                         {chatLog.map((chat, index) => (
                             <ListItem key={index}>
@@ -231,7 +238,7 @@ const Gpt = () => {
                         ))}
                     </List>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '50px'}}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px'}}>
                     <Box sx={{ width: '80%', marginRight: '20px'}}>
                         <TextareaAutosize
                             id="message-input"

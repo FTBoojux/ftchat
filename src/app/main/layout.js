@@ -14,6 +14,10 @@ export default function MainLayout({
           const webSocket = new WebSocket('ws://localhost:8080/websocket')
           webSocket.onopen = () => {
             console.log('connected')
+            webSocket.send(JSON.stringify({
+              type: 1,
+              token: localStorage.getItem('access_token')
+            }))
           }
           webSocket.onclose = () => {
             console.log('disconnected')

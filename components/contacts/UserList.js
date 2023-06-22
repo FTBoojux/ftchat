@@ -3,6 +3,7 @@ import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Divider, Ico
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import MyFetch from '@/app/api/MyFetch';
+import { WebSocketContext } from '@/app/main/WebSocketContext';
 
 const UserList = (props) => {
 
@@ -11,6 +12,7 @@ const UserList = (props) => {
   const [message, setMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const webSocket = React.useContext(WebSocketContext);
 
   const handleClick = (user) => {
     if (props.handleType === 2) {
@@ -27,21 +29,29 @@ const UserList = (props) => {
 
   const handleConfirm = () => {
     console.log(dialogUser);
-    MyFetch(`/api/account/contact/`, {
-      method: 'POST',
-      body: JSON.stringify({
-        target: dialogUser.user_id,
-        message: message,
-      }),
-    })
-    .then(response=>response.json())
-    .then((data) => {
-      setSnackbarOpen(true);
-      setSnackbarMessage(data.data);
-      handleClose();
-    }).catch((error) => {
-      console.error(error);
-    })
+    // MyFetch(`/api/account/contact/`, {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     target: dialogUser.user_id,
+    //     message: message,
+    //   }),
+    // })
+    // .then(response=>response.json())
+    // .then((data) => {
+    //   setSnackbarOpen(true);
+    //   setSnackbarMessage(data.data);
+    //   handleClose();
+    // }).catch((error) => {
+    //   console.error(error);
+    // })
+    webSocket.send(JSON.stringify({
+      type: 1,
+      token: localStorage.getItem('access_token'),
+      data: {
+        targetId: dialogUser.user_id,
+        message: message
+      }
+    }))
   };
 
   return (

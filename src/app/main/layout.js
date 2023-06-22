@@ -15,7 +15,7 @@ export default function MainLayout({
           webSocket.onopen = () => {
             console.log('connected')
             webSocket.send(JSON.stringify({
-              type: 1,
+              type: 0,
               token: localStorage.getItem('access_token')
             }))
           }

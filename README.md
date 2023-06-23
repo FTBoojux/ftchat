@@ -6,6 +6,8 @@
 
 对应的后端程序：[FTChat-backend](https://github.com/FTBoojux/ftchat_backend)
 
+对应的实时聊天模块：[FTChat-channel](https://github.com/FTBoojux/ftchat_channel)
+
 以下内容为Next.js框架原生内容：
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
@@ -38,3 +40,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## 开发日志
+
+### 2023-06-23
+
+1、修改redis中jwt令牌过期判断的逻辑；
+2、将好友请求改为使用webSocket请求

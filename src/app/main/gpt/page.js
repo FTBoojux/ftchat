@@ -183,7 +183,7 @@ const Gpt = () => {
                 }}
             >
                 <Box>
-                    {conversation.length === 0 ? 
+                    { conversation != null && conversation.length === 0 ? 
                         <Typography variant="body1">暂无会话</Typography> 
                         : 
                         <List>
@@ -195,9 +195,9 @@ const Gpt = () => {
                             </ListItem>
                             {
                                 conversation.map((item, index) => (
-                                    <>
+                                    <Box key={index}>
                                         <ListItem 
-                                            key={index}
+                                            
                                             selected={selectedConversation === item.conversation_id}
                                             onClick={() => {
                                                 handleConversationChange(item.conversation_id);
@@ -209,8 +209,7 @@ const Gpt = () => {
                                             </ListItemIcon>
                                         </ListItem>
                                         <Divider />
-                                    </>
-
+                                    </Box>
                                 ))
                             }
                         </List>    

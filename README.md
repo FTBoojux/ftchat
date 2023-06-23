@@ -6,7 +6,7 @@
 
 对应的后端程序：[FTChat-backend](https://github.com/FTBoojux/ftchat_backend)
 
-对应的实时聊天模块：[FTChat-channel](https://github.com/FTBoojux/ftchat_channel)
+对应的实时聊天模块：[FTChat-channel](https://github.com/FTBoojux/ftchat-channel)
 
 以下内容为Next.js框架原生内容：
 

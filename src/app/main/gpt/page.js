@@ -186,16 +186,18 @@ const Gpt = () => {
                 }}
             >
                 <Box>
+                <List>
+                    <ListItem onClick={()=>setOpenDialog(true)} >
+                        <ListItemIcon>
+                            <AddIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="创建会话" />
+                    </ListItem>
+                </List>
                     { conversation != null && conversation.length === 0 ? 
                         <Typography variant="body1">暂无会话</Typography> 
                         : 
                         <List>
-                            <ListItem onClick={()=>setOpenDialog(true)} >
-                                <ListItemIcon>
-                                    <AddIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="创建会话" />
-                            </ListItem>
                             {
                                 conversation.map((item, index) => (
                                     <Box key={index}>

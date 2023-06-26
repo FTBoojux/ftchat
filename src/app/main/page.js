@@ -15,9 +15,23 @@ import Message from './message/page';
 import Contacts from './contacts/page';
 import Settings from './settings/page';
 import Gpt from './gpt/page';
+import MyFetch from '@/app/api/MyFetch';
 const drawerWidth = 40;
 
 const Main = () => {
+  React.useEffect(() => {
+    MyFetch('/api/account/avatar/',{
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(async data => {
+        console.log('Success:', data);
+        window.localStorage.setItem('avatar', data.data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    })
+  }, []);
   const ColoredIcon = ({ to, children }) => {
     const location = useLocation();
 

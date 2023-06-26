@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText, Divider, Snackbar, ListItemIcon, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField} from '@mui/material';
+import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText, Divider, Snackbar, ListItemIcon, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Avatar} from '@mui/material';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import MyFetch from '../../api/MyFetch';
 import OmsViewMarkdown from '../../../../components/markdown/MarkdownViewer';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+const botAvatar = "http://47.98.97.181:9100/ftchat-avatar/1.png";
+const userAvatar = window.localStorage.getItem('avatar');
 
 const Gpt = () => {
     const [model, setModel] = useState('gpt-3.5-turbo');
@@ -245,11 +248,16 @@ const Gpt = () => {
                     <List >
                         {chatLog.map((chat, index) => (
                             <ListItem key={index}>
-                                <Box>
+                                <Box
+                                    style={chat.role === 'bot' ? { backgroundColor:'lightgray' } : { backgroundColor:'white' }}
+                                >
+                                    <Avatar src={chat.role === 'bot' ? botAvatar : userAvatar} />
                                     <Typography variant="body1">
-                                        {chat.role === 'user' ? `You: ${chat.content}` : `Bot: `}
+                                        {chat.role === 'user' ? chat.content : ``}
                                     </Typography>
-                                    {chat.role === 'bot' && <OmsViewMarkdown textContent={chat.content} darkMode /> }
+                                    <Box>
+                                        {chat.role === 'bot' && <OmsViewMarkdown textContent={chat.content} darkMode /> }
+                                    </Box>
                                 </Box>
                             </ListItem>
                         ))}

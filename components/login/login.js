@@ -6,6 +6,11 @@ import {
     Snackbar
 } from "@mui/material";
 import MuiAlert from '@mui/material/Alert';
+import CryptoJS from "crypto-js";
+
+const key = CryptoJS.enc.Utf8.parse("1234123412ABCDEF"); //十六位十六进制数作为密钥
+const iv = CryptoJS.enc.Utf8.parse('ABCDEF1234123412'); //十六位十六进制数作为密钥偏移量
+
 const Login = () => {
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
@@ -22,7 +27,7 @@ const Login = () => {
             },
             body: JSON.stringify({
                 email: email,
-                password:password
+                password:encrypt(password)
             }),
         })
         .then(response => response.json())
@@ -40,6 +45,17 @@ const Login = () => {
             console.error('Error:', error);
         });
     }
+
+    const encrypt = (word) => {
+        let srcs = CryptoJS.enc.Utf8.parse(word);
+        const encrypted = CryptoJS.AES.encrypt(srcs, key, {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        });
+        return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);  
+    }
+
     return (
         <Box
             component="form"

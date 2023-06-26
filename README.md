@@ -47,3 +47,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 1、修改redis中jwt令牌过期判断的逻辑；
 2、将好友请求改为使用webSocket请求
+
+### 2023-06-26
+
+1、调整了部分样式
+2、在GPT对话页面增加了头像显示
+3、登陆时对密码进行AES加密

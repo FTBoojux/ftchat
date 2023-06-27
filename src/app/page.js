@@ -3,13 +3,7 @@ import React, { useState, useEffect} from 'react';
 import {
     Box,
     Button,
-    ButtonGroup,
-    Card,
-    CardActionArea,
-    CardActions,
-    CardHeader,
-    FormControl, Input, InputLabel, OutlinedInput,
-    TextField
+    ButtonGroup
 } from "@mui/material";
 import styles from '../styles/home.module.css'
 import Register from "../../components/register/register";

@@ -53,3 +53,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 1、调整了部分样式
 2、在GPT对话页面增加了头像显示
 3、登陆时对密码进行AES加密
+
+### 2023-06-27
+1、调整了GPT会话页面的样式，调整了获取头像的方法
+2、现在可以修改用户信息了

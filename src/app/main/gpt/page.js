@@ -254,11 +254,12 @@ const Gpt = () => {
                                     style={chat.role === 'bot' ? { backgroundColor:'lightgray' } : { backgroundColor:'white' }}
                                 >
                                     <Avatar src={chat.role === 'bot' ? botAvatar : userAvatar} />
-                                    <Typography variant="body1">
+                                    {/* <Typography variant="body1">
                                         {chat.role === 'user' ? chat.content : ``}
-                                    </Typography>
+                                    </Typography> */}
                                     <Box>
-                                        {chat.role === 'bot' && <OmsViewMarkdown textContent={chat.content} darkMode /> }
+                                        <OmsViewMarkdown textContent={chat.content} darkMode /> 
+                                        {/* {chat.role === 'bot' && <OmsViewMarkdown textContent={chat.content} darkMode /> } */}
                                     </Box>
                                 </Box>
                             </ListItem>

@@ -26,6 +26,21 @@ const Main = () => {
   const [contactNum, setContactNum] = React.useState(0);
   const [msgHandleFuncMap, setMsgHandleFuncMap] = React.useState({});
 
+  const getNewMessageNums = () => {
+    MyFetch('/api/message/new_message_num', {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(async data => {
+        console.log('Success:', data);
+        setMessageNum(data.data.messages);
+        setContactNum(data.data.contacts);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    })
+  }
+
   React.useEffect(() => {
     MyFetch('/api/account/avatar/',{
       method: 'GET'
@@ -38,6 +53,7 @@ const Main = () => {
     .catch((error) => {
         console.error('Error:', error);
     })
+    getNewMessageNums();
     console.log('websocket', websocket);
   }, []);
 

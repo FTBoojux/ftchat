@@ -16,9 +16,16 @@ import Contacts from './contacts/page';
 import Settings from './settings/page';
 import Gpt from './gpt/page';
 import MyFetch from '@/app/api/MyFetch';
+import { WebSocketContext } from '@/app/main/WebSocketContext';
+import { Badge } from '@mui/material';
 const drawerWidth = 40;
 
 const Main = () => {
+  const websocket = React.useContext(WebSocketContext);
+  const [messageNum, setMessageNum] = React.useState(0);
+  const [contactNum, setContactNum] = React.useState(0);
+  const [msgHandleFuncMap, setMsgHandleFuncMap] = React.useState({});
+
   React.useEffect(() => {
     MyFetch('/api/account/avatar/',{
       method: 'GET'
@@ -31,7 +38,20 @@ const Main = () => {
     .catch((error) => {
         console.error('Error:', error);
     })
+    console.log('websocket', websocket);
   }, []);
+
+  React.useEffect(() => {
+    if (websocket) {
+      websocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('websocket data', data);
+        if(data.type === 1){
+          setContactNum(contactNum+1)
+        }
+      }
+    }
+  }, [websocket]);
   const ColoredIcon = ({ to, children }) => {
     const location = useLocation();
 
@@ -43,6 +63,15 @@ const Main = () => {
 
     return iconWithColor;
   };
+
+  const addContactNum = (num) => {
+    setContactNum(contactNum+num)
+  }
+
+  const addMessageNum = (num) => {
+    setMessageNum(messageNum+num)
+  }
+
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>
@@ -65,12 +94,16 @@ const Main = () => {
             </ListItem>
             <ListItem button component={NavLink} to="/main/message">
               <ColoredIcon to="/main/message">
-                <ChatIcon />
+                <Badge badgeContent={messageNum} color="error" invisible={messageNum===0} >
+                 <ChatIcon />
+                </Badge>
               </ColoredIcon>
             </ListItem>
             <ListItem button component={NavLink} to="/main/contacts">
               <ColoredIcon to="/main/contacts">
-                <PersonIcon />
+                <Badge badgeContent={contactNum} color="error" invisible={contactNum===0} >
+                  <PersonIcon />
+                </Badge>
               </ColoredIcon>
             </ListItem>
             <ListItem button component={NavLink} to="/main/settings">
@@ -84,8 +117,8 @@ const Main = () => {
           sx={{ flexGrow: 1, p: 3 }}
           >
           <Routes>
-            <Route path="/main/message" element={<Message />} />
-            <Route path="/main/contacts" element={<Contacts />} />
+            <Route path="/main/message" element={<Message setMessageNum={addMessageNum} />} />
+            <Route path="/main/contacts" element={<Contacts setContactNum={setContactNum} />} />
             <Route path="/main/settings" element={<Settings />} />
             <Route path="/main/gpt" element={<Gpt />} />
           </Routes>

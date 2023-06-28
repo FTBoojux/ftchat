@@ -1,6 +1,9 @@
 import React from 'react';
 
-const Message = () => {
+const Message = (props) => {
+
+  const {addMessageNum} = props
+
   return (
     <div>
       消息

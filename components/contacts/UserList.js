@@ -29,29 +29,31 @@ const UserList = (props) => {
 
   const handleConfirm = () => {
     console.log(dialogUser);
-    // MyFetch(`/api/account/contact/`, {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     target: dialogUser.user_id,
-    //     message: message,
-    //   }),
-    // })
-    // .then(response=>response.json())
-    // .then((data) => {
-    //   setSnackbarOpen(true);
-    //   setSnackbarMessage(data.data);
-    //   handleClose();
-    // }).catch((error) => {
-    //   console.error(error);
-    // })
-    webSocket.send(JSON.stringify({
-      type: 1,
-      token: localStorage.getItem('access_token'),
-      data: {
-        targetId: dialogUser.user_id,
-        message: message
+    MyFetch(`/api/account/contact/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        target: dialogUser.user_id,
+        message: message,
+      }),
+    })
+    .then(response=>response.json())
+    .then((data) => {
+      setSnackbarOpen(true);
+      setSnackbarMessage(data.data.msg);
+      handleClose();
+      if(data.data.res){
+        webSocket.send(JSON.stringify({
+          type: 1,
+          token: localStorage.getItem('access_token'),
+          data: {
+            targetId: dialogUser.user_id,
+            message: message
+          }
+        }))    
       }
-    }))
+    }).catch((error) => {
+      console.error(error);
+    })
   };
 
   return (

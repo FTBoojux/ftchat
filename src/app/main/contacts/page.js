@@ -3,21 +3,23 @@ import React from 'react';
 import { Box, TextField, Button, Container, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import DirectionsIcon from '@mui/icons-material/Directions';
 import MyFetch from '@/app/api/MyFetch';
 import UserList from '../../../../components/contacts/UserList';
-const Contracts = () => {
+
+
+const Contracts = (props) => {
     const [searchText, setSearchText] = React.useState('');
     const [friends, setFriends] = React.useState([]);
     const [strangers, setStrangers] = React.useState([]);
+ 
+    const {setContactNum} = props;
 
     React.useEffect(() => {
-        console.log(`You are searching for: ${searchText}`);
         searchFriends()
+        setContactNum(0)
     }, []);
     const handleChange = (event) => {
         setSearchText(event.target.value);

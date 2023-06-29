@@ -8,18 +8,20 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MyFetch from '@/app/api/MyFetch';
 import UserList from '../../../../components/contacts/UserList';
+import ContactRequestList from '../../../../components/contacts/ContactRequestList';
 
 
 const Contracts = (props) => {
     const [searchText, setSearchText] = React.useState('');
     const [friends, setFriends] = React.useState([]);
     const [strangers, setStrangers] = React.useState([]);
- 
+    const [contactRequests, setContactRequests] = React.useState([]); 
     const {setContactNum} = props;
 
     React.useEffect(() => {
-        searchFriends()
-        setContactNum(0)
+      fetchContactRequests() 
+      searchFriends()
+      setContactNum(0)
     }, []);
     const handleChange = (event) => {
         setSearchText(event.target.value);
@@ -57,6 +59,21 @@ const Contracts = (props) => {
       })
     }
 
+    const fetchContactRequests = () => {
+      MyFetch(`/api/account/contact_add/`, {
+        method: 'GET',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        console.log(data);
+        setContactRequests(data.data);
+      }
+      ).catch((error) => {
+        console.error(error);
+      }
+      )
+    }
+
     return (
         <Box>
           <Container
@@ -87,6 +104,16 @@ const Contracts = (props) => {
             </Paper>
           </Container>
           <Container>
+            <Box>
+              {
+                contactRequests.length !== 0 
+                && 
+                <>
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}您有新的好友请求></Typography>
+                  <ContactRequestList contactRequests={contactRequests} />
+                </>
+              }
+            </Box>
             <Box>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 好友

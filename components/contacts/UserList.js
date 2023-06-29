@@ -29,7 +29,7 @@ const UserList = (props) => {
 
   const handleConfirm = () => {
     console.log(dialogUser);
-    MyFetch(`/api/account/contact/`, {
+    MyFetch(`/api/account/contact_add/`, {
       method: 'POST',
       body: JSON.stringify({
         target: dialogUser.user_id,

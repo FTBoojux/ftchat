@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Box, TextField, Button, Container, Typography } from '@mui/material';
+import { Box, Snackbar, Container, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +17,8 @@ const Contracts = (props) => {
     const [strangers, setStrangers] = React.useState([]);
     const [contactRequests, setContactRequests] = React.useState([]); 
     const {setContactNum} = props;
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState('');
 
     React.useEffect(() => {
       fetchContactRequests() 
@@ -34,7 +36,7 @@ const Contracts = (props) => {
     };
 
     const searchFriends =  () => {
-      MyFetch(`/api/account/friends/?keyword=${searchText}`, {
+      MyFetch(`/api/account/contacts/?keyword=${searchText}`, {
         method: 'GET',
       })
       .then(response=>response.json())
@@ -74,6 +76,50 @@ const Contracts = (props) => {
       )
     }
 
+    const handleAccept = (requester) => {
+      MyFetch(`/api/account/contacts/`, {
+          method: 'POST',
+          body: JSON.stringify({
+              target: requester
+          }),
+      })
+      .then(response=>response.json())
+      .then((data) => {
+          console.log(data);
+          setSnackbarOpen(true);
+          setSnackbarMessage(data.message);
+
+      }).catch((error) => {
+          console.error(error);
+      })
+      removeContactRequest(requester);
+  }
+
+  const handleDecline = (requester) => {
+      MyFetch(`/api/account/contact_add/`, {
+          method: 'DELETE',
+          body: JSON.stringify({
+              target: requester
+          }),
+      })
+      .then(response=>response.json())
+      .then((data) => {
+          console.log(data);
+          setSnackbarOpen(true);
+          setSnackbarMessage(data.message);
+      }).catch((error) => {
+          console.error(error);
+      })
+      removeContactRequest(requester);
+  }
+
+  
+  const removeContactRequest = (requester) => {
+    // 移除指定的好友请求
+    const newContactRequests = contactRequests.filter((item) => item.requester !== requester);
+    setContactRequests(newContactRequests);      
+  }
+
     return (
         <Box>
           <Container
@@ -110,7 +156,11 @@ const Contracts = (props) => {
                 && 
                 <>
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}您有新的好友请求></Typography>
-                  <ContactRequestList contactRequests={contactRequests} />
+                  <ContactRequestList 
+                    contactRequests={contactRequests} 
+                    handleAccept={handleAccept} 
+                    handleDecline={handleDecline}
+                    />
                 </>
               }
             </Box>
@@ -137,6 +187,8 @@ const Contracts = (props) => {
               }
             </Box>
           </Container>
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)} message={snackbarMessage} />
+
         </Box>
     );
 };

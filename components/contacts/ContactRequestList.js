@@ -2,9 +2,10 @@ import { IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography, A
 import React from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
+import MyFetch from '@/app/api/MyFetch';
 
 const ContactRequestList = (props) => {
-    const {contactRequests} = props;
+    const {contactRequests,handleAccept,handleDecline} = props;
     const timestampConvert = (timestamp) => {
         let date = new Date(timestamp);
 
@@ -17,6 +18,9 @@ const ContactRequestList = (props) => {
 
         return formattedDate
     }
+
+
+
   return (
     <>
         <List>
@@ -26,10 +30,10 @@ const ContactRequestList = (props) => {
                         key={index}
                         secondaryAction={
                             <>
-                                <IconButton>
+                                <IconButton onClick={()=>{handleAccept(contactRequest.requester)}} >
                                     <DoneIcon />
                                 </IconButton>
-                                <IconButton>
+                                <IconButton onClick={()=>{handleDecline(contactRequest.requester)}} >
                                     <ClearIcon />
                                 </IconButton>
                             </>

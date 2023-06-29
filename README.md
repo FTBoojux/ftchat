@@ -57,3 +57,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2023-06-27
 1、调整了GPT会话页面的样式，调整了获取头像的方法
 2、现在可以修改用户信息了
+
+### 2023-06-29
+1、增加了好友申请的通知
+2、增加了好友申请的处理

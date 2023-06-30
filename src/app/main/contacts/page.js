@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MyFetch from '@/app/api/MyFetch';
 import UserList from '../../../../components/contacts/UserList';
 import ContactRequestList from '../../../../components/contacts/ContactRequestList';
+import {useRouter} from 'next/navigation'
 
 
 const Contracts = (props) => {
@@ -19,6 +20,7 @@ const Contracts = (props) => {
     const {setContactNum} = props;
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
+    const router = useRouter();
 
     React.useEffect(() => {
       fetchContactRequests() 
@@ -172,7 +174,7 @@ const Contracts = (props) => {
                 (friends != null && friends.length === 0) && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
               }
               {
-                (friends != null && friends.length !== 0) && <UserList users={friends} handleType={1} />
+                (friends != null && friends.length !== 0) && <UserList router={router} users={friends} handleType={1} />
               }
             </Box>
             <Box>
@@ -183,7 +185,7 @@ const Contracts = (props) => {
                 strangers.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
               }
               {
-                strangers.length !== 0 && <UserList users={strangers} handleType={2} />
+                strangers.length !== 0 && <UserList router={router} users={strangers} handleType={2} />
               }
             </Box>
           </Container>

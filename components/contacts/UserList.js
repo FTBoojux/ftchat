@@ -14,7 +14,7 @@ const UserList = (props) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const webSocket = React.useContext(WebSocketContext);
-
+  const {router} = props;
   const handleClick = (user) => {
     setOpen(true);
     setDialogUser(user);
@@ -65,13 +65,18 @@ const UserList = (props) => {
       .then(response=>response.json())
       .then((data) => {
         setSnackbarOpen(true);
-        setSnackbarMessage(data.data.message);
+        setSnackbarMessage(data.message);
         handleClose();
       }).catch((error) => {
         console.error(error);
       })
     }
   };
+
+  const openMessagePage = (e) => {
+    e.preventDefault();
+    router.push(`/message/${dialogUser.user_id}`);
+  }
 
   return (
     <Box>
@@ -85,6 +90,7 @@ const UserList = (props) => {
                   {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />}
                 </IconButton>
               }
+              
             >
               <ListItemAvatar>
                 <Avatar alt={user.username} src={user.avatar} />

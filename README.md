@@ -61,3 +61,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2023-06-29
 1、增加了好友申请的通知
 2、增加了好友申请的处理
+
+### 2023-06-30
+1、现在可以删除好友了

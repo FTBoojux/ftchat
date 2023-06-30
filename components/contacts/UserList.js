@@ -9,16 +9,19 @@ const UserList = (props) => {
 
   const [open, setOpen] = useState(false);
   const [dialogUser, setDialogUser] = useState(null);
+  const [dialogTitle, setDialogTitle] = useState('');
   const [message, setMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const webSocket = React.useContext(WebSocketContext);
 
   const handleClick = (user) => {
+    setOpen(true);
+    setDialogUser(user);
     if (props.handleType === 2) {
-      setOpen(true);
-      setDialogUser(user);
-    } else {
+      setDialogTitle('添加联系人');
+    } else if(props.handleType === 1) {
+      setDialogTitle('删除联系人');
     }
   };
 
@@ -29,31 +32,45 @@ const UserList = (props) => {
 
   const handleConfirm = () => {
     console.log(dialogUser);
-    MyFetch(`/api/account/contact_add/`, {
-      method: 'POST',
-      body: JSON.stringify({
-        target: dialogUser.user_id,
-        message: message,
-      }),
-    })
-    .then(response=>response.json())
-    .then((data) => {
-      setSnackbarOpen(true);
-      setSnackbarMessage(data.data.msg);
-      handleClose();
-      if(data.data.res){
-        webSocket.send(JSON.stringify({
-          type: 1,
-          token: localStorage.getItem('access_token'),
-          data: {
-            targetId: dialogUser.user_id,
-            message: message
-          }
-        }))    
-      }
-    }).catch((error) => {
-      console.error(error);
-    })
+    if (props.handleType === 2) {
+      MyFetch(`/api/account/contact_add/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          target: dialogUser.user_id,
+          message: message,
+        }),
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        setSnackbarOpen(true);
+        setSnackbarMessage(data.data.msg);
+        handleClose();
+        if(data.data.res){
+          webSocket.send(JSON.stringify({
+            type: 1,
+            token: localStorage.getItem('access_token'),
+            data: {
+              targetId: dialogUser.user_id,
+              message: message
+            }
+          }))    
+        }
+      }).catch((error) => {
+        console.error(error);
+      })
+    } else if(props.handleType === 1) {
+      MyFetch(`/api/account/contacts/${dialogUser.user_id}/`, {
+        method: 'DELETE',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        setSnackbarOpen(true);
+        setSnackbarMessage(data.data.message);
+        handleClose();
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
   };
 
   return (
@@ -78,7 +95,7 @@ const UserList = (props) => {
         ))}
       </List>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>添加联系人</DialogTitle>
+        <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
           <ListItem>
             <ListItemAvatar>
@@ -86,21 +103,26 @@ const UserList = (props) => {
             </ListItemAvatar>
             <ListItemText primary={dialogUser?.username} secondary={dialogUser?.bio} />
           </ListItem>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="备注消息"
-            type="text"
-            fullWidth
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
-          />
+          {
+            props.handleType === 2 &&
+              <TextField
+              autoFocus
+              margin="dense"
+              label="备注消息"
+              type="text"
+              fullWidth
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+            />
+
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>取消</Button>
           <Button onClick={handleConfirm}>确认</Button>
         </DialogActions>
       </Dialog>
+      
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
         <Alert elevation={6} variant='filled' onClose={() => setSnackbarOpen(false)} severity="success">
           {snackbarMessage}

@@ -64,3 +64,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-06-30
 1、现在可以删除好友了
+
+### 2023-07-01
+1、设计会话界面的样式和实现

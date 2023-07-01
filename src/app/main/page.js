@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import { HashRouter as Router, Route, Link, Routes, NavLink, useLocation} from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
@@ -24,7 +23,6 @@ const Main = () => {
   const websocket = React.useContext(WebSocketContext);
   const [messageNum, setMessageNum] = React.useState(0);
   const [contactNum, setContactNum] = React.useState(0);
-  const [msgHandleFuncMap, setMsgHandleFuncMap] = React.useState({});
 
   const getNewMessageNums = () => {
     MyFetch('/api/message/new_message_num', {

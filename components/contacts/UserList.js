@@ -73,9 +73,13 @@ const UserList = (props) => {
     }
   };
 
-  const openMessagePage = (e) => {
+  const openMessagePage = (e,user_id) => {
+    if (props.handleType === 2) {
+      return;
+    }
     e.preventDefault();
-    router.push(`/message/${dialogUser.user_id}`);
+    e.stopPropagation();
+    router.push(`/main/message/${user_id}`);
   }
 
   return (
@@ -90,7 +94,8 @@ const UserList = (props) => {
                   {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />}
                 </IconButton>
               }
-              
+              sx={{ cursor: 'pointer' }}
+              onClick={(e)=>openMessagePage(e, user.user_id)}
             >
               <ListItemAvatar>
                 <Avatar alt={user.username} src={user.avatar} />

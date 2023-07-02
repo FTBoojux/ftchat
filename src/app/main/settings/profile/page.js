@@ -15,7 +15,7 @@ const Profile = () => {
       .then((response) => {
         if (response.result === 'success') {
           setUserInfo(response.data);
-          window.localStorage.setItem('avatar', response.data.avatar);
+          localStorage.setItem('avatar', response.data.avatar);
         }
       })
       .catch((error) => {

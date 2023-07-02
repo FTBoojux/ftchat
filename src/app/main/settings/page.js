@@ -1,8 +1,14 @@
+"use client"
 import MyFetch from '@/app/api/MyFetch';
 import { Button, List, ListItemButton, ListItemIcon } from '@mui/material';
 import React from 'react';
 import {WebviewWindow} from '@tauri-apps/api/window'
 
+// import dynamic from 'next/dynamic';
+// const WebviewWindow = dynamic(
+//   () => import('@tauri-apps/api/window').then((mod) => mod.WebviewWindow),
+//   { ssr: false }
+// );
 const Settings = () => {
 
   const handleLogout = () => {
@@ -14,11 +20,16 @@ const Settings = () => {
     }).catch((error) => {
       console.error(error);
     })
-    localStorage.clear();
-    window.location.reload();
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+      window.location.reload();
+    }
   }
 
   const openEditProfileWindow = async () => {
+    if (typeof window === 'undefined') {
+      return
+    }
     const webview = new WebviewWindow('修改个人信息',{
       url: 'main/settings/profile',
     })

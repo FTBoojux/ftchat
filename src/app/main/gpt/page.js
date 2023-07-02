@@ -1,3 +1,4 @@
+"use client"
 import React, {useState} from 'react';
 import { Box, Select, MenuItem, Typography ,Button, List, ListItem, ListItemText, Divider, Snackbar, ListItemIcon, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Avatar} from '@mui/material';
 import TextareaAutosize from '@mui/base/TextareaAutosize';

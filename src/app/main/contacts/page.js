@@ -17,7 +17,6 @@ const Contracts = (props) => {
     const [friends, setFriends] = React.useState([]);
     const [strangers, setStrangers] = React.useState([]);
     const [contactRequests, setContactRequests] = React.useState([]); 
-    const {setContactNum} = props;
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
     const router = useRouter();
@@ -25,7 +24,6 @@ const Contracts = (props) => {
     React.useEffect(() => {
       fetchContactRequests() 
       searchFriends()
-      setContactNum(0)
     }, []);
     const handleChange = (event) => {
         setSearchText(event.target.value);

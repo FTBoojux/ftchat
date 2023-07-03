@@ -70,3 +70,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-07-02
 1、调整了项目组织结构
+
+### 2023-07-03
+1、聊天记录样式设计

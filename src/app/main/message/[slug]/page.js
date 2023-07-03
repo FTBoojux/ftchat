@@ -13,18 +13,24 @@ const Page = ({params}) => {
 
     const messages = [
         {
-          "author": "Alice",
-          "text": "Hello, how are you?"
+          author: 'Alice',
+          text: 'Hello, how are you?',
+          avatar: 'https://example.com/avatar1.jpg',
+          timestamp: '2023-07-03T14:15:22Z'
         },
         {
-          "author": "Bob",
-          "text": "I'm fine, thank you. And you?"
+          author: 'Me',
+          text: 'I am fine, thank you.',
+          avatar: 'https://example.com/avatar2.jpg',
+          timestamp: '2023-07-03T14:16:00Z'
         },
         {
-          "author": "Alice",
-          "text": "I'm good. Thanks for asking.hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+          author: 'Alice',
+          text: 'That is great!Hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+          avatar: 'https://example.com/avatar1.jpg',
+          timestamp: '2023-07-03T14:16:30Z'
         }
-      ]
+      ];
       
 
     return (

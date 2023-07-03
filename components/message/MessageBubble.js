@@ -23,6 +23,7 @@ export default function MessageBubble({ message, side }) {
                 display: 'flex',
                 flexDirection: side === 'right' ? 'row-reverse' : 'row',
                 // alignItems: 'center',
+                marginTop: '20px',
             }}
         >
             <Avatar
@@ -64,17 +65,41 @@ export default function MessageBubble({ message, side }) {
 
         <Box
           sx={{
-            p: 1,
-            pl: 2,
-            pr: 2,
-            bgcolor: side === 'right' ? 'primary.main' : 'grey.300',
-            color: side === 'right' ? 'primary.contrastText' : 'text.primary',
+            // p: 1,
+            // pl: 2,
+            // pr: 2,
+            // bgcolor: side === 'right' ? 'primary.main' : 'grey.300',
+            // color: side === 'right' ? 'primary.contrastText' : 'text.primary',
             borderRadius: 1,
-            maxWidth: '80%',
+            // maxWidth: '80%',
             wordBreak: 'break-word',
           }}
         >
-          <Typography>{message.text}</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: side === 'right' ? 'row-reverse' : 'row',
+                }}
+            >
+                <Typography 
+                    variant="body2"
+                    >{message.author}</Typography>                
+            </Box>
+            <Box
+                sx={{
+                    p: 1,
+                    pl: 2,
+                    pr: 2,
+                    bgcolor: side === 'right' ? 'primary.main' : 'grey.300',
+                    color: side === 'right' ? 'primary.contrastText' : 'text.primary',
+                    borderRadius: 1,
+                }}
+            >{message.text}</Box>
+            <Box>
+                <Typography>
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                </Typography>
+            </Box>
         </Box>
         {/* <Box sx={{
             width: 0,

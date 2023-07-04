@@ -42,10 +42,13 @@ const Gpt = () => {
         }).then(response=>response.json())
         .then((data) => {
             console.log(data);
-            setConversation(data.data);
+            if (data.result === "success") {
+                setConversation(data.data);
+            }
         })
         .catch((error) => {
             console.error(error);
+            setConversation([]);
         })
     }
 

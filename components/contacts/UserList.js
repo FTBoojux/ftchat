@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Divider, IconButton, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Snackbar, Alert } from '@mui/material';
+import { Avatar, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemAvatar, ListItemText, Divider, IconButton, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Snackbar, Alert, Collapse } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import MyFetch from '@/app/api/MyFetch';
 import { WebSocketContext } from '@/app/main/WebSocketContext';
 
@@ -13,6 +17,7 @@ const UserList = (props) => {
   const [message, setMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [listOpen, setListOpen] = useState(true);
   const webSocket = React.useContext(WebSocketContext);
   const {router} = props;
   const handleClick = (user) => {
@@ -82,29 +87,58 @@ const UserList = (props) => {
     router.push(`/main/message/${user_id}`);
   }
 
+  const ActionIcon = (type)=>{
+    if(type === 1){
+      return <DeleteIcon />
+    }else if(type === 2){
+      return <AddIcon />
+    }else if(type === 3){
+      return <ExitToAppIcon />
+    }else{
+      return <AddIcon />
+    }
+  }
+
   return (
     <Box>
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {props.users.map((user, index) => (
-          <React.Fragment key={index}>
-            {index !== 0 && <Divider variant="inset" component="li" />}
-            <ListItem
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete" onClick={() => handleClick(user)}>
-                  {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />}
-                </IconButton>
-              }
-              sx={{ cursor: 'pointer' }}
-              onClick={(e)=>openMessagePage(e, user.user_id)}
-            >
-              <ListItemAvatar>
-                <Avatar alt={user.username} src={user.avatar} />
-              </ListItemAvatar>
-              <ListItemText primary={user.username} secondary={user.bio} />
-            </ListItem>
-          </React.Fragment>
-        ))}
+        <ListItemButton onClick={()=>{setListOpen(!listOpen)}}>
+          <ListItemText>{props.title}</ListItemText>
+          {listOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={listOpen} timeout={"auto"} unmountOnExit>
+          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {
+              (!props.users || props.users.length === 0) && 
+              <ListItem>
+                <ListItemText>暂无搜索结果</ListItemText>
+              </ListItem>
+            }
+            {props.users && props.users.map((user, index) => (
+              <React.Fragment key={index}>
+                {index !== 0 && <Divider variant="inset" component="li" />}
+                <ListItem
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleClick(user)}>
+                      {/* {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />} */}
+                      <ActionIcon type={props.handleType} />
+                    </IconButton>
+                  }
+                  sx={{ cursor: 'pointer' }}
+                  onClick={(e)=>openMessagePage(e, user.user_id)}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt={user.username} src={user.avatar} />
+                  </ListItemAvatar>
+                  <ListItemText primary={user.username} secondary={user.bio} />
+                </ListItem>
+              </React.Fragment>
+            ))}
+          </List>  
+        </Collapse> 
+
       </List>
+      
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>

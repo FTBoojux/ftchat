@@ -16,6 +16,8 @@ const Contracts = (props) => {
     const [searchText, setSearchText] = React.useState('');
     const [friends, setFriends] = React.useState([]);
     const [strangers, setStrangers] = React.useState([]);
+    const [groupUnjoined, setGroupUnjoined] = React.useState([]); 
+    const [groupJoined, setGroupJoined] = React.useState([]);
     const [contactRequests, setContactRequests] = React.useState([]); 
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
@@ -23,7 +25,8 @@ const Contracts = (props) => {
 
     React.useEffect(() => {
       fetchContactRequests() 
-      searchFriends()
+      // searchFriends()
+      search()
     }, []);
     const handleChange = (event) => {
         setSearchText(event.target.value);
@@ -32,31 +35,24 @@ const Contracts = (props) => {
     const handleSearch = () => {
       console.log('clicked!');
         // 在这里添加你的搜索逻辑
-        searchStrangers()
+        search();
     };
 
-    const searchFriends =  () => {
-      MyFetch(`/api/account/contacts/?keyword=${searchText}`, {
-        method: 'GET',
-      })
-      .then(response=>response.json())
-      .then((data) => {
-        console.log('data',data);
-        setFriends(data.data)
-      }).catch((error) => {
-        console.error(error);
-      })
-    }
-
-    const searchStrangers = () => {
-      MyFetch(`/api/account/strangers/?keyword=${searchText}`, {
+    const search = () => {
+      MyFetch(`/api/search/?keyword=${searchText}`, {
         method: 'GET',
       })
       .then(response=>response.json())
       .then((data) => {
         console.log(data);
-        setStrangers(data.data);
-      }).catch((error) => {
+        if(data.result === 'success'){
+          setFriends(data.data.contacts);
+          setStrangers(data.data.strangers);
+          setGroupUnjoined(data.data.groups_unjoined);
+          setGroupJoined(data.data.groups_joined);  
+        }
+      })
+      .catch((error) => {
         console.error(error);
       })
     }
@@ -165,26 +161,36 @@ const Contracts = (props) => {
               }
             </Box>
             <Box>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                好友
-              </Typography>
-              {
-                (friends != null && friends.length === 0) && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
-              }
-              {
-                (friends != null && friends.length !== 0) && <UserList router={router} users={friends} handleType={1} />
-              }
+              <UserList 
+                router={router} 
+                users={groupJoined} 
+                handleType={3} 
+                title="已加入群聊"
+                />
             </Box>
             <Box>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                陌生人
-              </Typography>
-              {
-                strangers.length === 0 && <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>暂无搜索结果</Typography>
-              }
-              {
-                strangers.length !== 0 && <UserList router={router} users={strangers} handleType={2} />
-              }
+              <UserList 
+                router={router} 
+                users={groupUnjoined} 
+                handleType={4} 
+                title="未加入群聊"
+                />
+            </Box>
+            <Box>
+              <UserList 
+                router={router} 
+                users={friends} 
+                handleType={1} 
+                title="好友"
+              />
+            </Box>
+            <Box>
+              <UserList 
+                router={router} 
+                users={strangers} 
+                handleType={2} 
+                title="陌生人"
+                />
             </Box>
           </Container>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)} message={snackbarMessage} />

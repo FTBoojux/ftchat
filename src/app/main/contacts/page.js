@@ -21,6 +21,10 @@ const Contracts = (props) => {
     const [contactRequests, setContactRequests] = React.useState([]); 
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
+    const [groupJoinedOpen, setGroupJoinedOpen] = React.useState(false);
+    const [groupUnjoinedOpen, setGroupUnjoinedOpen] = React.useState(false);
+    const [friendsOpen, setFriendsOpen] = React.useState(false);
+    const [strangersOpen, setStrangersOpen] = React.useState(false);
     const router = useRouter();
 
     React.useEffect(() => {
@@ -33,9 +37,8 @@ const Contracts = (props) => {
     };
 
     const handleSearch = () => {
-      console.log('clicked!');
-        // 在这里添加你的搜索逻辑
-        search();
+      search();
+      setListAllOpen();  
     };
 
     const search = () => {
@@ -49,7 +52,7 @@ const Contracts = (props) => {
           setFriends(data.data.contacts);
           setStrangers(data.data.strangers);
           setGroupUnjoined(data.data.groups_unjoined);
-          setGroupJoined(data.data.groups_joined);  
+          setGroupJoined(data.data.groups_joined);
         }
       })
       .catch((error) => {
@@ -116,6 +119,13 @@ const Contracts = (props) => {
     setContactRequests(newContactRequests);      
   }
 
+  const setListAllOpen = ()=>{
+    setGroupJoinedOpen(true);
+    setGroupUnjoinedOpen(true);
+    setFriendsOpen(true);
+    setStrangersOpen(true);
+  }
+
     return (
         <Box>
           <Container
@@ -166,6 +176,8 @@ const Contracts = (props) => {
                 users={groupJoined} 
                 handleType={3} 
                 title="已加入群聊"
+                listOpen={groupJoinedOpen}
+                setListOpen={setGroupJoinedOpen}
                 />
             </Box>
             <Box>
@@ -174,6 +186,8 @@ const Contracts = (props) => {
                 users={groupUnjoined} 
                 handleType={4} 
                 title="未加入群聊"
+                listOpen={groupUnjoinedOpen}
+                setListOpen={setGroupUnjoinedOpen}
                 />
             </Box>
             <Box>
@@ -182,6 +196,8 @@ const Contracts = (props) => {
                 users={friends} 
                 handleType={1} 
                 title="好友"
+                listOpen={friendsOpen}
+                setListOpen={setFriendsOpen}
               />
             </Box>
             <Box>
@@ -190,6 +206,8 @@ const Contracts = (props) => {
                 users={strangers} 
                 handleType={2} 
                 title="陌生人"
+                listOpen={strangersOpen}
+                setListOpen={setStrangersOpen}
                 />
             </Box>
           </Container>

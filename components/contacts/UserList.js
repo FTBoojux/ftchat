@@ -17,8 +17,9 @@ const UserList = (props) => {
   const [message, setMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [listOpen, setListOpen] = useState(true);
+  // const [listOpen, setListOpen] = useState(false);
   const webSocket = React.useContext(WebSocketContext);
+  const {listOpen,setListOpen} = props;
   const {router} = props;
   const handleClick = (user) => {
     setOpen(true);
@@ -106,7 +107,7 @@ const UserList = (props) => {
           <ListItemText>{props.title}</ListItemText>
           {listOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
-        <Collapse in={listOpen} timeout={"auto"} unmountOnExit>
+        <Collapse in={listOpen} timeout={"auto"} unmountOnExit listOpen={listOpen}>
           <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {
               (!props.users || props.users.length === 0) && 

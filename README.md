@@ -77,3 +77,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2023-07-04
 1、现在好友、陌生人、群聊使用聚合搜索的接口了
 2、调整了添加好友和群聊界面的样式
+
+### 2023-08-03
+1、现在会展示加群申请了

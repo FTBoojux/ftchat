@@ -10,6 +10,7 @@ import MyFetch from '@/app/api/MyFetch';
 import UserList from '../../../../components/contacts/UserList';
 import ContactRequestList from '../../../../components/contacts/ContactRequestList';
 import {useRouter} from 'next/navigation'
+import GroupJoinRequestsList from '../../../../components/group/GroupJoinRequestsList';
 
 
 const Contracts = (props) => {
@@ -18,6 +19,7 @@ const Contracts = (props) => {
     const [strangers, setStrangers] = React.useState([]);
     const [groupUnjoined, setGroupUnjoined] = React.useState([]); 
     const [groupJoined, setGroupJoined] = React.useState([]);
+    const [groupJoinRequests, setGroupJoinRequests] = React.useState([]); 
     const [contactRequests, setContactRequests] = React.useState([]); 
     const [snackbarOpen, setSnackbarOpen] = React.useState(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState('');
@@ -29,6 +31,7 @@ const Contracts = (props) => {
 
     React.useEffect(() => {
       fetchContactRequests() 
+      fetchGroupJoinRequest()
       // searchFriends()
       search()
     }, []);
@@ -73,6 +76,20 @@ const Contracts = (props) => {
         console.error(error);
       }
       )
+    }
+
+    const fetchGroupJoinRequest = () =>{
+      MyFetch(`/api/groups/join_requests/`, {
+        method: 'GET',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        console.log(data);
+        setGroupJoinRequests(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
     }
 
     const handleAccept = (requester) => {
@@ -158,10 +175,22 @@ const Contracts = (props) => {
           <Container>
             <Box>
               {
+                (groupJoinRequests.length !== null && groupJoinRequests.length !== 0) &&
+                <>
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>有新的加群申请</Typography>
+                  <GroupJoinRequestsList 
+                    groupJoinRequests={groupJoinRequests}
+                  ></GroupJoinRequestsList>
+                </>
+                
+              }
+            </Box>
+            <Box>
+              {
                 contactRequests.length !== 0 
                 && 
                 <>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}您有新的好友请求></Typography>
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>您有新的好友请求</Typography>
                   <ContactRequestList 
                     contactRequests={contactRequests} 
                     handleAccept={handleAccept} 

@@ -89,7 +89,7 @@ export default function MainLayout({
           webSocket.onmessage = (message) => {
             console.log(message)
             const data = JSON.parse(message.data)
-            if(data.type === 1){
+            if(data.type === 1 || data.type === 2){
               setContactNum(contactNum+1)
             }
           }
@@ -134,7 +134,7 @@ export default function MainLayout({
                 </Badge>
               </ColoredIcon>
             </ListItem>
-            <ListItem button onClick={()=>{toPage("/main/contacts")}}>
+            <ListItem button onClick={()=>{toPage("/main/contacts");setContactNum(0)}}>
               <ColoredIcon to="/main/contacts">
                 <Badge badgeContent={contactNum} color="error" invisible={contactNum===0} >
                   <PersonIcon />

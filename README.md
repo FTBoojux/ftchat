@@ -80,3 +80,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-08-03
 1、现在会展示加群申请了
+
+### 2023-08-04 
+1、增加处理加群请求的功能

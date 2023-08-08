@@ -83,3 +83,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-08-04 
 1、增加处理加群请求的功能
+
+### 2023-08-08
+1、登录过期时跳转回登录页

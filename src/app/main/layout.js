@@ -4,7 +4,7 @@ import { WebSocketContext, WebSocketProvider } from "./WebSocketContext";
 import MyFetch from "@/app/api/MyFetch";
 import { Route, Link, Routes, NavLink, useLocation} from 'react-router-dom';
 import { useRouter } from "next/navigation";
-import { Box, List, ListItem, Badge, Drawer} from '@mui/material';
+import { Box, List, ListItem, Badge, Drawer, Snackbar} from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -19,6 +19,8 @@ export default function MainLayout({
     const [messageNum, setMessageNum] = useState(0);
     const [contactNum, setContactNum] = useState(0);
     const [path, setPath] = useState('');
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
     const router = useRouter();
 
     useEffect(() => {
@@ -28,6 +30,12 @@ export default function MainLayout({
       .then(response => response.json())
       .then(async data => {
           console.log('Success:', data);
+          if(data.code !== 200){
+            setMessage('登录已过期！')
+            setOpen(true)
+            window.localStorage.removeItem('access_token')
+            window.location.href = '/'  
+          }
           window.localStorage.setItem('avatar', data.data);
       })
       .catch((error) => {
@@ -153,6 +161,7 @@ export default function MainLayout({
           >
           {children}
         </Box>
+        <Snackbar open={open} autoHideDuration={6000} onClose={()=>{setOpen(false)}} message={message}></Snackbar>
       </Box>
       </WebSocketContext.Provider>
     )

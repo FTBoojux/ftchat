@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import ExitToAppSharpIcon from '@mui/icons-material/ExitToAppSharp';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import MyFetch from '@/app/api/MyFetch';
@@ -20,13 +21,13 @@ const UserList = (props) => {
   // const [listOpen, setListOpen] = useState(false);
   const webSocket = React.useContext(WebSocketContext);
   const {listOpen,setListOpen} = props;
-  const {router} = props;
+  const {router,handleType} = props;
   const handleClick = (user) => {
     setOpen(true);
     setDialogUser(user);
-    if (props.handleType === 2) {
+    if (handleType === 2) {
       setDialogTitle('添加联系人');
-    } else if(props.handleType === 1) {
+    } else if(handleType === 1) {
       setDialogTitle('删除联系人');
     }
   };
@@ -37,8 +38,7 @@ const UserList = (props) => {
   };
 
   const handleConfirm = () => {
-    console.log(dialogUser);
-    if (props.handleType === 2) {
+    if (handleType === 2) {
       MyFetch(`/api/account/contact_add/`, {
         method: 'POST',
         body: JSON.stringify({
@@ -64,7 +64,7 @@ const UserList = (props) => {
       }).catch((error) => {
         console.error(error);
       })
-    } else if(props.handleType === 1) {
+    } else if(handleType === 1) {
       MyFetch(`/api/account/contacts/${dialogUser.user_id}/`, {
         method: 'DELETE',
       })
@@ -80,7 +80,7 @@ const UserList = (props) => {
   };
 
   const openMessagePage = (e,user_id) => {
-    if (props.handleType === 2) {
+    if (handleType === 2) {
       return;
     }
     e.preventDefault();
@@ -88,13 +88,13 @@ const UserList = (props) => {
     router.push(`/main/message/${user_id}`);
   }
 
-  const ActionIcon = (type)=>{
-    if(type === 1){
+  const ActionIcon = ({type})=>{
+    if(type == 1){
       return <DeleteIcon />
-    }else if(type === 2){
+    }else if(type == 2){
       return <AddIcon />
-    }else if(type === 3){
-      return <ExitToAppIcon />
+    }else if(type == 3){
+      return <ExitToAppSharpIcon />
     }else{
       return <AddIcon />
     }
@@ -122,7 +122,7 @@ const UserList = (props) => {
                   secondaryAction={
                     <IconButton edge="end" aria-label="delete" onClick={() => handleClick(user)}>
                       {/* {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />} */}
-                      <ActionIcon type={props.handleType} />
+                      <ActionIcon type={handleType} />
                     </IconButton>
                   }
                   sx={{ cursor: 'pointer' }}

@@ -1,8 +1,7 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Box } from '@mui/material';
-// import MessageBubble from '@components/message/MessageBubble';
+import { Box, Button, TextField } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 
 const avatar_url = "http://47.98.97.181:9100/ftchat-avatar/a7388de6-c190-4edd-ae1d-4962cd2b1043.png"
@@ -38,21 +37,37 @@ const Page = ({params}) => {
             <p>slug: {params.slug}</p>
             <Box
                 sx={{
-                    width: '100%',
-                    height: '100%',
-                    overflowY: 'auto',
-                    padding: 2,
-                    boxSizing: 'border-box',
+                  width: '100%',
+                  height: '100%',
+                  overflowY: 'auto',
+                  padding: 2,
+                  boxSizing: 'border-box',
                 }}
             >
-            {messages.map((message, i) => (
-                <MessageBubble
-                key={i}
-                message={message}
-                side={i % 2 === 0 ? 'right' : 'left'}
+              {messages.map((message, i) => (
+                  <MessageBubble
+                  key={i}
+                  message={message}
+                  side={i % 2 === 0 ? 'right' : 'left'}
+                  />
+              ))}
+            </Box>
+            <Box>
+              <Box>
+                <TextField
+                  id="outlined-multiline-static"
+                  label="发送消息"
+                  multiline
+                  rows={3}
+                  fullWidth
                 />
-            ))}
-    </Box>
+              </Box>
+              <Box>
+                <Button variant="contained" 
+                  style={{float: 'right'}}
+                >发送</Button>
+              </Box>
+            </Box>
         </div>
     );
 };

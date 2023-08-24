@@ -22,13 +22,17 @@ const UserList = (props) => {
   const webSocket = React.useContext(WebSocketContext);
   const {listOpen,setListOpen} = props;
   const {router,handleType} = props;
-  const handleClick = (user) => {
+  const handleClick = (e,user) => {
+    e.preventDefault();
+    e.stopPropagation();
     setOpen(true);
     setDialogUser(user);
     if (handleType === 2) {
       setDialogTitle('添加联系人');
     } else if(handleType === 1) {
       setDialogTitle('删除联系人');
+    }else if(handleType === 3){
+      setDialogTitle('退出群聊');
     }
   };
 
@@ -72,6 +76,39 @@ const UserList = (props) => {
       .then((data) => {
         setSnackbarOpen(true);
         setSnackbarMessage(data.message);
+        handleClose();
+      }).catch((error) => {
+        console.error(error);
+      })
+    }else if(handleType === 3){
+      console.log(dialogUser);
+      MyFetch(`/api/groups/${dialogUser.group_id}/members/`, {
+        method: 'DELETE',
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        setSnackbarOpen(true);
+        if(data.code == 200){
+          setSnackbarMessage("已退出群聊");
+        }else{
+          setSnackbarMessage(data.message);
+        }
+        handleClose();
+
+      }).catch((error) => {
+        console.error(error);
+      })
+    }else if(handleType === 4){
+      MyFetch(`/api/groups/${dialogUser.group_id}/join_requests/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          message: message,
+        }),
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        setSnackbarOpen(true);
+        setSnackbarMessage(data.message)
         handleClose();
       }).catch((error) => {
         console.error(error);
@@ -120,7 +157,7 @@ const UserList = (props) => {
                 {index !== 0 && <Divider variant="inset" component="li" />}
                 <ListItem
                   secondaryAction={
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleClick(user)}>
+                    <IconButton edge="end" aria-label="delete" onClick={(e) => handleClick(e,user)}>
                       {/* {props.handleType === 2 ? <AddIcon /> : <DeleteIcon />} */}
                       <ActionIcon type={handleType} />
                     </IconButton>
@@ -142,7 +179,7 @@ const UserList = (props) => {
       
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{dialogTitle}</DialogTitle>
-        <DialogContent>
+        <DialogContent >
           <ListItem>
             <ListItemAvatar>
               <Avatar alt={dialogUser?.username} src={dialogUser?.avatar} />
@@ -150,7 +187,7 @@ const UserList = (props) => {
             <ListItemText primary={dialogUser?.username} secondary={dialogUser?.bio} />
           </ListItem>
           {
-            props.handleType === 2 &&
+            (handleType === 2 || handleType === 4) &&
               <TextField
               autoFocus
               margin="dense"
@@ -170,7 +207,7 @@ const UserList = (props) => {
       </Dialog>
       
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-        <Alert elevation={6} variant='filled' onClose={() => setSnackbarOpen(false)} severity="success">
+        <Alert elevation={6} variant='filled' onClose={() => setSnackbarOpen(false)} severity="info">
           {snackbarMessage}
         </Alert>
       </Snackbar>

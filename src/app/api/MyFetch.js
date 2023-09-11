@@ -10,6 +10,7 @@ export default async function MyFetch(url, options = {}) {
 
     if (token) {
         defaultOptions.headers['Authorization'] = `Bearer ${token}`;
+        defaultOptions.headers['mode'] = 'outer';
     }
 
     return fetch(url, { ...defaultOptions, ...options });

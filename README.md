@@ -86,3 +86,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-08-08
 1、登录过期时跳转回登录页
+
+### 2023-10-18
+1、现在会话中可以显示消息记录了(尚不支持滚动查询)

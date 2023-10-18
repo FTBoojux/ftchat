@@ -1,12 +1,12 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import React from 'react';
 
-export default function MessageBubble({ message, side }) {
+export default function MessageBubble({ message }) {
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: side === 'right' ? 'flex-end' : 'flex-start',
+        justifyContent: message.side === 'right' ? 'flex-end' : 'flex-start',
         my: 1,
       }}
     >
@@ -14,30 +14,31 @@ export default function MessageBubble({ message, side }) {
         sx={{
         //   maxWidth: '60%',
           display: 'flex',
-          flexDirection: side === 'right' ? 'row-reverse' : 'row',
+          flexDirection: message.side === 'right' ? 'row-reverse' : 'row',
         //   alignItems: 'center',
         }}
       >
         <Box
             sx={{
                 display: 'flex',
-                flexDirection: side === 'right' ? 'row-reverse' : 'row',
+                flexDirection: message.side === 'right' ? 'row-reverse' : 'row',
                 // alignItems: 'center',
                 marginTop: '20px',
             }}
         >
             <Avatar
-            sx={{
-                bgcolor: side === 'right' ? 'primary.main' : 'grey.500',
-                ml: side === 'right' ? 1 : 0,
-                mr: side === 'right' ? 0 : 1,
-            }}
+              sx={{
+                  bgcolor: message.side === 'right' ? 'primary.main' : 'grey.500',
+                  ml: message.side === 'right' ? 1 : 0,
+                  mr: message.side === 'right' ? 0 : 1,
+              }}
+              src={message.sender.avatar}
             >
-            {message.author[0]}
+              {message.sender.username}
             </Avatar>
             <Box>
                 {
-                    side === 'right' ?         
+                    message.side === 'right' ?         
                     <Box sx={{
                         width: 0,
                         height: 0,
@@ -78,23 +79,23 @@ export default function MessageBubble({ message, side }) {
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: side === 'right' ? 'row-reverse' : 'row',
+                    flexDirection: message.side === 'right' ? 'row-reverse' : 'row',
                 }}
             >
                 <Typography 
                     variant="body2"
-                    >{message.author}</Typography>                
+                    >{message.sender.username}</Typography>                
             </Box>
             <Box
                 sx={{
                     p: 1,
                     pl: 2,
                     pr: 2,
-                    bgcolor: side === 'right' ? 'primary.main' : 'grey.300',
-                    color: side === 'right' ? 'primary.contrastText' : 'text.primary',
+                    bgcolor: message.side === 'right' ? 'primary.main' : 'grey.300',
+                    color: message.side === 'right' ? 'primary.contrastText' : 'text.primary',
                     borderRadius: 1,
                 }}
-            >{message.text}</Box>
+            >{message.content}</Box>
             <Box>
                 <Typography>
                     {new Date(message.timestamp).toLocaleTimeString()}

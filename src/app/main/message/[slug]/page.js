@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Box, Button, TextField } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
+import localForage from 'localforage';
 
 const avatar_url = "http://47.98.97.181:9100/ftchat-avatar/a7388de6-c190-4edd-ae1d-4962cd2b1043.png"
 
@@ -15,9 +16,16 @@ const Page = ({params}) => {
     const [pagingState, setPagingState] = React.useState("");
     // const [pageSize,setPageSize] = React.useState(20);
     const [messageList, setMessageList] = React.useState([]);
+    const [message, setMessage] = React.useState("");
 
     React.useEffect(() => {
       fetchMessageList();
+      // 当组件加载时，从 localForage 获取保存的消息输入
+      localForage.getItem(conversation_id).then(savedMessage => {
+        if (savedMessage) {
+          setMessage(savedMessage);
+        }
+      });
     }, [])
 
     const messages = [
@@ -62,7 +70,12 @@ const Page = ({params}) => {
         console.error(error);
       })
     }
-
+    const handleChange = async (event) => {
+      const newMessage = event.target.value;
+      setMessage(newMessage);
+      // 将新输入的消息保存到 localForage
+      await localForage.setItem(conversation_id, newMessage);
+    };
     return (
         <Box
           sx={{
@@ -98,6 +111,8 @@ const Page = ({params}) => {
                   multiline
                   rows={3}
                   fullWidth
+                  value={message}
+                  onChange={handleChange}
                 />
               </Box>
               <Box>

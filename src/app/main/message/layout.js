@@ -36,7 +36,7 @@ export default function MessageLayout({
     <Box>
         <Box sx={{ 
             display: 'flex' ,
-            height: '100%',
+            // height: '100%',
             
             }}>
             <Box

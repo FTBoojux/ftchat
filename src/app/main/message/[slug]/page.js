@@ -64,14 +64,22 @@ const Page = ({params}) => {
     }
 
     return (
-        <Box>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateRows: '1fr auto', // 1fr 表示剩余空间，auto 表示内容高度
+            height: '90vh',
+            border: '1px solid #ccc',
+          }}
+        >
             <Box
                 sx={{
-                  width: '100%',
-                  height: '100%',
+                  // width: '100%',
+                  // height: '100%',
                   overflowY: 'auto',
                   padding: 2,
                   boxSizing: 'border-box',
+                  flexGrow: 1
                 }}
             >
               {messageList.map((message, i) => (

@@ -76,6 +76,27 @@ const Page = ({params}) => {
       // 将新输入的消息保存到 localForage
       await localForage.setItem(conversation_id, newMessage);
     };
+    const handleSend = () => {
+      // 发送消息
+      MyFetch(`/api/conversation/${conversation_id}/message/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          message: message,
+        }),
+      })
+      .then(response=>response.json())
+      .then((data) => {
+        console.log(data);
+        setMessageList(messageList.concat(data.data));
+        // 清空输入框
+        setMessage('');
+        // 清空 localForage 中保存的消息
+        localForage.removeItem(conversation_id);
+
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
     return (
         <Box
           sx={{
@@ -118,6 +139,7 @@ const Page = ({params}) => {
               <Box>
                 <Button variant="contained" 
                   style={{float: 'right'}}
+                  onClick={handleSend}
                 >发送</Button>
               </Box>
             </Box>

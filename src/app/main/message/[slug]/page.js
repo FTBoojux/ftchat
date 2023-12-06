@@ -103,7 +103,6 @@ const Page = ({params}) => {
             display: 'grid',
             gridTemplateRows: '1fr auto', // 1fr 表示剩余空间，auto 表示内容高度
             height: '90vh',
-            border: '1px solid #ccc',
           }}
         >
             <Box

@@ -92,3 +92,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-11-23
 1.调整message页面样式
+
+### 2023-12-06
+1.发送消息到会话后通过socket进行通知

@@ -5,6 +5,7 @@ import { Box, Button, TextField } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
+import { WebSocketContext } from '@/app/main/WebSocketContext';
 
 const avatar_url = "http://47.98.97.181:9100/ftchat-avatar/a7388de6-c190-4edd-ae1d-4962cd2b1043.png"
 
@@ -17,6 +18,7 @@ const Page = ({params}) => {
     // const [pageSize,setPageSize] = React.useState(20);
     const [messageList, setMessageList] = React.useState([]);
     const [message, setMessage] = React.useState("");
+    const webSocket = React.useContext(WebSocketContext);
 
     React.useEffect(() => {
       fetchMessageList();
@@ -27,27 +29,6 @@ const Page = ({params}) => {
         }
       });
     }, [])
-
-    const messages = [
-        {
-          author: 'Alice',
-          text: 'Hello, how are you?',
-          avatar: 'https://example.com/avatar1.jpg',
-          timestamp: '2023-07-03T14:15:22Z'
-        },
-        {
-          author: 'Me',
-          text: 'I am fine, thank you.',
-          avatar: 'https://example.com/avatar2.jpg',
-          timestamp: '2023-07-03T14:16:00Z'
-        },
-        {
-          author: 'Alice',
-          text: 'That is great!Hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
-          avatar: 'https://example.com/avatar1.jpg',
-          timestamp: '2023-07-03T14:16:30Z'
-        }
-      ];
       
     const fetchMessageList = () => {
       let url = `/api/conversation/${conversation_id}/message/`;
@@ -92,6 +73,13 @@ const Page = ({params}) => {
         setMessage('');
         // 清空 localForage 中保存的消息
         localForage.removeItem(conversation_id);
+        if(data.result === 'success'){
+          webSocket.send(JSON.stringify({
+            type: 3,
+            token: localStorage.getItem('access_token'),
+            data: data.data
+          }))
+        }
 
       }).catch((error) => {
         console.error(error);

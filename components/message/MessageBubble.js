@@ -2,6 +2,30 @@ import { Avatar, Box, Typography } from '@mui/material';
 import React from 'react';
 
 export default function MessageBubble({ message }) {
+
+  const timeConvert = (timestamp) => {
+    // 日期不同时补充显示日期，年份不同时补充显示年份
+    const date = new Date(timestamp);
+    const now = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = `0${date.getHours()}`.slice(-2);
+    const minute = `0${date.getMinutes()}`.slice(-2);
+    const nowYear = now.getFullYear();
+    const nowMonth = now.getMonth() + 1;
+    const nowDay = now.getDate();
+    const nowHour = `0${now.getHours()}`.slice(-2);
+    const nowMinute = `0${now.getMinutes()}`.slice(-2);
+    if (year === nowYear && month === nowMonth && day === nowDay) {
+      return `${hour}:${minute}`;
+    } else if (year === nowYear) {
+      return `${month}-${day} ${hour}:${minute}`;
+    } else {
+      return `${year}-${month}-${day} ${hour}:${minute}`;
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -98,7 +122,8 @@ export default function MessageBubble({ message }) {
             >{message.content}</Box>
             <Box>
                 <Typography>
-                    {new Date(message.timestamp).toLocaleTimeString()}
+                    {/* {new Date(message.timestamp).toLocaleTimeString()} */}
+                    {timeConvert(message.timestamp)}
                 </Typography>
             </Box>
         </Box>

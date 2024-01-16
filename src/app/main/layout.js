@@ -100,6 +100,9 @@ export default function MainLayout({
             if(data.type === 1 || data.type === 2){
               setContactNum(contactNum+1)
             }
+            if(data.type === 3){
+              addMessageNum(1)
+            }
           }
           setWs(webSocket)
         }

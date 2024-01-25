@@ -95,3 +95,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2023-12-06
 1.发送消息到会话后通过socket进行通知
+
+### 2024-01-25
+1.会话列表显示最后一条消息

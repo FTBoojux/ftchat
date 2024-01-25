@@ -55,7 +55,7 @@ export default function MessageLayout({
                             </ListItemAvatar>
                             <ListItemText 
                             primary={conversation.conversation_name} 
-                            // secondary={conversation.last_message} 
+                            secondary={conversation.last_message} 
                             />
                         </ListItem>
                         )

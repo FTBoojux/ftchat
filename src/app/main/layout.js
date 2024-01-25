@@ -24,23 +24,6 @@ export default function MainLayout({
     const router = useRouter();
 
     useEffect(() => {
-      MyFetch('/api/account/avatar/',{
-        method: 'GET'
-      })
-      .then(response => response.json())
-      .then(async data => {
-          console.log('Success:', data);
-          if(data.code !== 200){
-            setMessage('登录已过期！')
-            setOpen(true)
-            window.localStorage.removeItem('access_token')
-            window.location.href = '/'  
-          }
-          window.localStorage.setItem('avatar', data.data);
-      })
-      .catch((error) => {
-          console.error('Error:', error);
-      })
       getNewMessageNums();
     }, []);
 

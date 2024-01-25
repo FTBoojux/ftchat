@@ -8,12 +8,33 @@ import {
 import styles from '../styles/home.module.css'
 import Register from "../../components/register/register";
 import Login from "../../components/login/login";
+import MyFetch from "@/app/api/MyFetch";
 const HomePage = () => {
     const [isLogin, setIsLogin] = useState(true);
     useEffect(()=>{
         const access_token = window.localStorage.getItem('access_token')
         if(access_token){
-            window.location.href = "/main"
+            // window.location.href = "/main"
+            MyFetch('/api/account/avatar/',{
+                method: 'GET'
+              })
+              .then(response => response.json())
+              .then(async data => {
+                  console.log('Success:', data);
+                  if(data.code !== 200){
+                    setMessage('登录已过期！')
+                    setOpen(true)
+                    window.localStorage.removeItem('access_token')
+                    // window.location.href = '/'  
+                  }else{
+                    window.localStorage.setItem('avatar', data.data);
+                    window.location.href = '/main'
+                  }
+                //   window.localStorage.setItem('avatar', data.data);
+              })
+              .catch((error) => {
+                  console.error('Error:', error);
+              })
         }
     },[])
     const LoginBox = ()=>{

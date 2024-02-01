@@ -99,3 +99,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2024-01-25
 1.会话列表显示最后一条消息
 2.自动登录逻辑优化
+
+### 2024-02-01
+1.引入redux
+2.使用redux管理会话的最新消息

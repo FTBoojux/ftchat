@@ -9,6 +9,8 @@ import styles from '../styles/home.module.css'
 import Register from "../../components/register/register";
 import Login from "../../components/login/login";
 import MyFetch from "@/app/api/MyFetch";
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
 const HomePage = () => {
     const [isLogin, setIsLogin] = useState(true);
     useEffect(()=>{
@@ -45,17 +47,19 @@ const HomePage = () => {
         }
     }
     return (
-        <Box className={styles.container} >
-            <Box className={styles.box}>
-                <LoginBox></LoginBox>
-                <Box className={"align"}>
-                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                        <Button onClick={()=>setIsLogin(true) } >登录</Button>
-                        <Button onClick={()=>setIsLogin(false) }>注册</Button>
-                    </ButtonGroup>
+        <Provider store={store}>
+            <Box className={styles.container} >
+                <Box className={styles.box}>
+                    <LoginBox></LoginBox>
+                    <Box className={"align"}>
+                        <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                            <Button onClick={()=>setIsLogin(true) } >登录</Button>
+                            <Button onClick={()=>setIsLogin(false) }>注册</Button>
+                        </ButtonGroup>
+                    </Box>
                 </Box>
             </Box>
-        </Box>
+        </Provider>
     );
 };
 

@@ -121,7 +121,7 @@ export default function MainLayout({
                 <SmartToyIcon />
               </ColoredIcon>
             </ListItem>
-            <ListItem button onClick={()=>{toPage("/main/message")}}>
+            <ListItem button onClick={()=>{toPage("/main/message");setMessageNum(0)}}>
               <ColoredIcon to="/main/message">
                 <Badge badgeContent={messageNum} color="error" invisible={messageNum===0} >
                  <ChatIcon />

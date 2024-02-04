@@ -103,3 +103,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2024-02-01
 1.引入redux
 2.使用redux管理会话的最新消息
+
+### 2024-02-04
+1.移除redux

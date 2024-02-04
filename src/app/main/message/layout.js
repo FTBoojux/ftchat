@@ -1,10 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import MyFetch from '@/app/api/MyFetch';
 import {useRouter} from "next/navigation";
 import {Box, List, ListItem, ListItemAvatar, ListItemText, Avatar, Drawer, Divider} from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { setSession, removeSession } from "@/store/sessionSlice";
 export default function MessageLayout({
     children, // will be a page or nested layout
   }) {
@@ -24,12 +22,6 @@ export default function MessageLayout({
         .then(response=>response.json())
         .then((data) => {
           setConversationList(data.data);
-          data.data.forEach((conversation) => {
-            dispatch(setSession({
-              sessionId: conversation.conversation_id,
-              content: conversation
-            }))
-          })
         }).catch((error) => {
           console.error(error);
         })

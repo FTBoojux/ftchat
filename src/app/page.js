@@ -9,8 +9,6 @@ import styles from '../styles/home.module.css'
 import Register from "../../components/register/register";
 import Login from "../../components/login/login";
 import MyFetch from "@/app/api/MyFetch";
-import { Provider } from 'react-redux';
-import { store } from '@/store/store';
 const HomePage = () => {
     const [isLogin, setIsLogin] = useState(true);
     useEffect(()=>{
@@ -47,7 +45,6 @@ const HomePage = () => {
         }
     }
     return (
-        <Provider store={store}>
             <Box className={styles.container} >
                 <Box className={styles.box}>
                     <LoginBox></LoginBox>
@@ -59,7 +56,6 @@ const HomePage = () => {
                     </Box>
                 </Box>
             </Box>
-        </Provider>
     );
 };
 

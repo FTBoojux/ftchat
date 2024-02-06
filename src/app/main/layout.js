@@ -85,7 +85,8 @@ const MainLayout = ({
               setContactNum(contactNum+1)
             }
             if(data.type === 3){
-              if(data.data.side == 'left'){
+              console.log('currentConversation', ctxRef.current.currentConversation);
+              if(data.data.side == 'left' && data.data.conversation_id  != ctxRef.current.currentConversation){
                 addMessageNum(1)
               }
               ctxRef.current.updateConversation(data.data,ctxRef.current.conversations)

@@ -22,6 +22,7 @@ export default function MessageLayout({
     }, [])
     
     const conversationClick = (conversation) => {
+        ctx.setCurrentConversation(conversation.conversation_id);
         router.push(`/main/message/${conversation.conversation_id}`)
     }
 
@@ -34,6 +35,9 @@ export default function MessageLayout({
             }}>
             <Box
                 component="nav"
+                sx={{
+                    width: '30%'
+                }}
             >
                 <List>
                     {
@@ -47,8 +51,13 @@ export default function MessageLayout({
                             <Avatar alt={conversation.conversation_name} src={conversation.conversation_avatar} />
                             </ListItemAvatar>
                             <ListItemText 
-                            primary={conversation.conversation_name} 
-                            secondary={conversation.last_message} 
+                                primary={conversation.conversation_name} 
+                                secondary={conversation.last_message} 
+                                sx={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap'
+                                }}
                             />
                         </ListItem>
                         )

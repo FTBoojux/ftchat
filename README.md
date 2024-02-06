@@ -109,3 +109,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2024-02-06
 1.修改context，使用context管理会话的最新消息
+2.调整总的未读消息的数量显示

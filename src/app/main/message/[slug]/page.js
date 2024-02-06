@@ -21,6 +21,7 @@ const Page = ({params}) => {
     const ctx = useWebContext();
     React.useEffect(() => {
       fetchMessageList();
+      ctx.setCurrentConversation(conversation_id);
       // 当组件加载时，从 localForage 获取保存的消息输入
       localForage.getItem(conversation_id).then(savedMessage => {
         if (savedMessage) {
@@ -72,7 +73,6 @@ const Page = ({params}) => {
       .then(response=>response.json())
       .then((data) => {
         console.log(data);
-        // setMessageList(messageList.concat(data.data));
         // 清空输入框
         setMessage('');
         // 清空 localForage 中保存的消息

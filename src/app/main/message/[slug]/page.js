@@ -28,7 +28,12 @@ const Page = ({params}) => {
         }
       });
     }, [])
-      
+    React.useEffect(() => {
+      console.log('lastMessage', ctx.lastMessage);
+      if(ctx.lastMessage && ctx.lastMessage.conversation_id === conversation_id){
+        setMessageList([...messageList, ctx.lastMessage]);
+      }
+    }, [ctx.lastMessage])
     const fetchMessageList = () => {
       let url = `/api/conversation/${conversation_id}/message/`;
       if(pagingState) {
@@ -67,7 +72,7 @@ const Page = ({params}) => {
       .then(response=>response.json())
       .then((data) => {
         console.log(data);
-        setMessageList(messageList.concat(data.data));
+        // setMessageList(messageList.concat(data.data));
         // 清空输入框
         setMessage('');
         // 清空 localForage 中保存的消息

@@ -7,6 +7,7 @@ export const WebSocketContext = createContext()
 export const WebSocketProvider = ({ children }) => {
   const [ws, setWs] = useState(null)
   const [conversations, setConversations] = useState([])
+  const [lastMessage, setLastMessage] = useState(null)
   useEffect(() => {
     console.log('conversations 修改', conversations);
   },[conversations])
@@ -25,7 +26,7 @@ export const WebSocketProvider = ({ children }) => {
     });
     setConversations(newConversations)
   }
-  return <WebSocketContext.Provider value={{ws, saveWs, conversations, saveConversations, updateConversation}}>{children}</WebSocketContext.Provider>
+  return <WebSocketContext.Provider value={{ws, saveWs, conversations, saveConversations, updateConversation, lastMessage, setLastMessage}}>{children}</WebSocketContext.Provider>
 }
 
 export const useWebContext = ()=>useContext(WebSocketContext)

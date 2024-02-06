@@ -85,8 +85,11 @@ const MainLayout = ({
               setContactNum(contactNum+1)
             }
             if(data.type === 3){
-              addMessageNum(1)
+              if(data.data.side == 'left'){
+                addMessageNum(1)
+              }
               ctxRef.current.updateConversation(data.data,ctxRef.current.conversations)
+              ctxRef.current.setLastMessage(data.data)
             }
           }
           saveWs(webSocket)

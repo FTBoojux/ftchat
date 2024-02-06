@@ -1,31 +1,25 @@
 "use client";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useContext} from "react";
 import MyFetch from '@/app/api/MyFetch';
 import {useRouter} from "next/navigation";
 import {Box, List, ListItem, ListItemAvatar, ListItemText, Avatar, Drawer, Divider} from '@mui/material';
+import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
+import { fetchConversationList } from "@/app/api/ConversationApi";
 export default function MessageLayout({
     children, // will be a page or nested layout
   }) {
 
-    const [conversationList, setConversationList] = useState([])
+    const ctx = useWebContext();
+    
 
     const router = useRouter();
 
     useEffect(() => {
         fetchConversationList()
+        .then(data=>{
+            ctx.saveConversations(data);
+        })
     }, [])
-
-    const fetchConversationList = () => {
-        MyFetch(`/api/conversations/`, {
-          method: 'GET',
-        })
-        .then(response=>response.json())
-        .then((data) => {
-          setConversationList(data.data);
-        }).catch((error) => {
-          console.error(error);
-        })
-    }
     
     const conversationClick = (conversation) => {
         router.push(`/main/message/${conversation.conversation_id}`)
@@ -43,7 +37,7 @@ export default function MessageLayout({
             >
                 <List>
                     {
-                    conversationList && conversationList.map((conversation,index) => {
+                    ctx.conversations && ctx.conversations.map((conversation,index) => {
                         return (
                         <ListItem 
                             key={index}

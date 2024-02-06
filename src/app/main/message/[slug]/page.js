@@ -5,7 +5,7 @@ import { Box, Button, TextField } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
-import { WebSocketContext } from '@/app/main/WebSocketContext';
+import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
 
 const avatar_url = "http://47.98.97.181:9100/ftchat-avatar/a7388de6-c190-4edd-ae1d-4962cd2b1043.png"
 
@@ -18,8 +18,7 @@ const Page = ({params}) => {
     // const [pageSize,setPageSize] = React.useState(20);
     const [messageList, setMessageList] = React.useState([]);
     const [message, setMessage] = React.useState("");
-    const webSocket = React.useContext(WebSocketContext);
-
+    const ctx = useWebContext();
     React.useEffect(() => {
       fetchMessageList();
       // 当组件加载时，从 localForage 获取保存的消息输入
@@ -74,7 +73,8 @@ const Page = ({params}) => {
         // 清空 localForage 中保存的消息
         localForage.removeItem(conversation_id);
         if(data.result === 'success'){
-          webSocket.send(JSON.stringify({
+        console.log('message ctx', ctx);
+          ctx.ws.send(JSON.stringify({
             type: 3,
             token: localStorage.getItem('access_token'),
             data: data.data

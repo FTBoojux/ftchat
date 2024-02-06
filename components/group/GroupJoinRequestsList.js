@@ -1,7 +1,7 @@
 import React from "react";
 
 import { List, ListItem, ListItemAvatar, ListItemText, Typography, Avatar, Button, Snackbar } from "@mui/material";
-import { WebSocketContext } from "@/app/main/WebSocketContext";
+import { WebSocketContext } from "@/app/WebSocketContext";
 import MyFetch from "@/app/api/MyFetch";
 
 export default function GroupJoinRequestsList(props) {

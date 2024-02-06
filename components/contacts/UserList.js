@@ -8,7 +8,7 @@ import ExitToAppSharpIcon from '@mui/icons-material/ExitToAppSharp';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import MyFetch from '@/app/api/MyFetch';
-import { WebSocketContext } from '@/app/main/WebSocketContext';
+import { WebSocketContext } from '@/app/WebSocketContext';
 
 const UserList = (props) => {
 

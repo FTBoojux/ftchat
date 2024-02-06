@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState, cloneElement } from "react"
-import { WebSocketContext, WebSocketProvider } from "./WebSocketContext";
+import { useEffect, useState, cloneElement, useRef } from "react"
+import { useWebContext } from "@/app/WebSocketContext";
 import MyFetch from "@/app/api/MyFetch";
 import { useRouter } from "next/navigation";
 import { Box, List, ListItem, Badge, Drawer, Snackbar} from '@mui/material';
@@ -10,11 +10,14 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 const drawerWidth = 40;
 
-export default function MainLayout({
+const MainLayout = ({
     children, // will be a page or nested layout
-  }) {
+  })=>{
+    const {ws, saveWs, conversations, saveConversations, updateConversation} = useWebContext();
+    const ctx = useWebContext();
+    const ctxRef = useRef(ctx);
+    ctxRef.current = ctx;
 
-    const [ws, setWs] = useState(null)
     const [messageNum, setMessageNum] = useState(0);
     const [contactNum, setContactNum] = useState(0);
     const [path, setPath] = useState('');
@@ -25,7 +28,6 @@ export default function MainLayout({
     useEffect(() => {
       getNewMessageNums();
     }, []);
-
     const getNewMessageNums = () => {
       MyFetch('/api/message/new_message_num', {
         method: 'GET'
@@ -84,9 +86,10 @@ export default function MainLayout({
             }
             if(data.type === 3){
               addMessageNum(1)
+              ctxRef.current.updateConversation(data.data,ctxRef.current.conversations)
             }
           }
-          setWs(webSocket)
+          saveWs(webSocket)
         }
         return () => {
           if(ws !== null) {
@@ -101,7 +104,6 @@ export default function MainLayout({
     }
 
     return (
-      <WebSocketContext.Provider value={ws} >   
       <Box sx={{ display: 'flex' }}>
         <Drawer
           variant="permanent"
@@ -148,6 +150,7 @@ export default function MainLayout({
         </Box>
         <Snackbar open={open} autoHideDuration={6000} onClose={()=>{setOpen(false)}} message={message}></Snackbar>
       </Box>
-      </WebSocketContext.Provider>
     )
   }
+
+export default MainLayout;

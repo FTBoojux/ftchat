@@ -38,18 +38,19 @@ const Page = ({params}) => {
     const fetchMessageList = () => {
       let url = `/api/conversation/${conversation_id}/message/`;
       if(pagingState) {
-        url = url + `?paging_state=${pagingState}`
+        url = url + `?paging_state=${encodeURIComponent(pagingState)}`
       }
       MyFetch(url, {
         method: 'GET',
       })
       .then(response=>response.json())
       .then((data) => {
-        console.log(data.data.message_list)
         // setConversationList(data.data);
-        if(data.paging_state != pagingState){
-          setMessageList(messageList.concat(data.data.message_list));
-          setPagingState(data.paging_state);
+        console.log(data.data);
+        if(data.data.paging_state != pagingState){
+          // setMessageList(messageList.concat(data.data.message_list));
+          setMessageList([...data.data.message_list, ...messageList])
+          setPagingState(data.data.paging_state);
         }
         // console.log(messageList);
       }).catch((error) => {
@@ -90,6 +91,15 @@ const Page = ({params}) => {
         console.error(error);
       })
     }
+
+    const handleScroll = (e) => {
+
+      console.log('scroll',e.target.scrollTop, pagingState);
+      const target = e.target;
+      if(target.scrollTop === 0 && pagingState != null){
+        fetchMessageList();
+      }
+    }
     return (
         <Box
           sx={{
@@ -107,6 +117,7 @@ const Page = ({params}) => {
                   boxSizing: 'border-box',
                   flexGrow: 1
                 }}
+                onScroll={handleScroll}
             >
               {messageList.map((message, i) => (
                   <MessageBubble

@@ -18,9 +18,17 @@ const Page = ({params}) => {
     // const [pageSize,setPageSize] = React.useState(20);
     const [messageList, setMessageList] = React.useState([]);
     const [message, setMessage] = React.useState("");
+    const cvsnBoxRef = React.useRef(null);
     const ctx = useWebContext();
     React.useEffect(() => {
-      fetchMessageList();
+      fetchMessageList()
+        .then(() => {
+          setTimeout(() => {  
+            cvsnBoxRef.current.scrollTop = cvsnBoxRef.current.scrollHeight;
+            console.log('scrollHeight', cvsnBoxRef.current.scrollHeight);
+            console.log('scrollTop', cvsnBoxRef.current.scrollTop);
+          },0)
+        })
       ctx.setCurrentConversation(conversation_id);
       // 当组件加载时，从 localForage 获取保存的消息输入
       localForage.getItem(conversation_id).then(savedMessage => {
@@ -36,25 +44,28 @@ const Page = ({params}) => {
       }
     }, [ctx.lastMessage])
     const fetchMessageList = () => {
-      let url = `/api/conversation/${conversation_id}/message/`;
-      if(pagingState) {
-        url = url + `?paging_state=${encodeURIComponent(pagingState)}`
-      }
-      MyFetch(url, {
-        method: 'GET',
-      })
-      .then(response=>response.json())
-      .then((data) => {
-        // setConversationList(data.data);
-        console.log(data.data);
-        if(data.data.paging_state != pagingState){
-          // setMessageList(messageList.concat(data.data.message_list));
-          setMessageList([...data.data.message_list, ...messageList])
-          setPagingState(data.data.paging_state);
+      return new Promise((resolve, reject) => {
+        let url = `/api/conversation/${conversation_id}/message/`;
+        if(pagingState) {
+          url = url + `?paging_state=${encodeURIComponent(pagingState)}`
         }
-        // console.log(messageList);
-      }).catch((error) => {
-        console.error(error);
+        MyFetch(url, {
+          method: 'GET',
+        })
+        .then(response=>response.json())
+        .then((data) => {
+          // setConversationList(data.data);
+          if(data.data.paging_state != pagingState){
+            // setMessageList(messageList.concat(data.data.message_list));
+            setMessageList([...data.data.message_list, ...messageList])
+            setPagingState(data.data.paging_state);
+          }
+          resolve()
+          // console.log(messageList);
+        }).catch((error) => {
+          console.error(error);
+          reject()
+        })
       })
     }
     const handleChange = async (event) => {
@@ -93,11 +104,16 @@ const Page = ({params}) => {
     }
 
     const handleScroll = (e) => {
-
-      console.log('scroll',e.target.scrollTop, pagingState);
       const target = e.target;
       if(target.scrollTop === 0 && pagingState != null){
-        fetchMessageList();
+        const oldScrollHeight = cvsnBoxRef.current.scrollHeight
+        fetchMessageList()
+        .then(()=>{
+          setTimeout(() => {
+            const newScrollHeight = cvsnBoxRef.current.scrollHeight
+            cvsnBoxRef.current.scrollTop = newScrollHeight-oldScrollHeight
+          }, 0);
+        })
       }
     }
     return (
@@ -118,6 +134,7 @@ const Page = ({params}) => {
                   flexGrow: 1
                 }}
                 onScroll={handleScroll}
+                ref={cvsnBoxRef}
             >
               {messageList.map((message, i) => (
                   <MessageBubble

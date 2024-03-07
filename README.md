@@ -114,3 +114,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2024-02-27
 1.会话消息增加滚动查询
 2.调整会话消息页面的样式
+
+### 2024-03-07
+1.现在支持在聊天消息中带有图片了

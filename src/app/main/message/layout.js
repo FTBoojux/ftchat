@@ -31,12 +31,15 @@ export default function MessageLayout({
         <Box sx={{ 
             display: 'flex' ,
             // height: '100%',
-            
+            width: '100%',
             }}>
             <Box
                 component="nav"
                 sx={{
-                    width: '30%'
+                    flexGrow: 1,
+                    flexBasis: '30%',
+                    overflow: 'hidden',
+                    maxWidth: '30vw',
                 }}
             >
                 <List>
@@ -52,7 +55,7 @@ export default function MessageLayout({
                             </ListItemAvatar>
                             <ListItemText 
                                 primary={conversation.conversation_name} 
-                                secondary={conversation.last_message} 
+                                secondary={conversation.last_message.replace(/<img[^>]*>/g, '[图片]')} 
                                 sx={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
@@ -69,7 +72,8 @@ export default function MessageLayout({
             <Box 
                 component="main" 
                 sx={{ 
-                    flex: 1, 
+                    flexGrow: 2,
+                    flexBasis: '69%', 
                     p: 3,
                 }}
             >

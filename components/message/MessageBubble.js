@@ -1,4 +1,5 @@
 import { Avatar, Box, Typography } from '@mui/material';
+import DOMPurify from 'dompurify';
 import React from 'react';
 
 export default function MessageBubble({ message }) {
@@ -119,7 +120,10 @@ export default function MessageBubble({ message }) {
                     color: message.side === 'right' ? 'primary.contrastText' : 'text.primary',
                     borderRadius: 1,
                 }}
-            >{message.content}</Box>
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }}
+            >
+              {/* {message.content} */}
+            </Box>
             <Box>
                 <Typography>
                     {/* {new Date(message.timestamp).toLocaleTimeString()} */}

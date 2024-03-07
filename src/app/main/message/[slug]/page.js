@@ -19,6 +19,7 @@ const Page = ({params}) => {
     const [messageList, setMessageList] = React.useState([]);
     const [message, setMessage] = React.useState("");
     const cvsnBoxRef = React.useRef(null);
+    const inputBoxRef = React.useRef(null);
     const ctx = useWebContext();
     React.useEffect(() => {
       fetchMessageList()
@@ -76,6 +77,7 @@ const Page = ({params}) => {
     };
     const handleSend = () => {
       // 发送消息
+      console.log('send message', message);
       MyFetch(`/api/conversation/${conversation_id}/message/`, {
         method: 'POST',
         body: JSON.stringify({
@@ -87,6 +89,7 @@ const Page = ({params}) => {
         console.log(data);
         // 清空输入框
         setMessage('');
+        inputBoxRef.current.innerHTML = '';
         // 清空 localForage 中保存的消息
         localForage.removeItem(conversation_id);
         if(data.result === 'success'){
@@ -115,6 +118,11 @@ const Page = ({params}) => {
           }, 0);
         })
       }
+    }
+
+    const handleInput = (e) => {
+      setMessage(inputBoxRef.current.innerHTML);
+      console.log(inputBoxRef.current.innerHTML);
     }
     return (
         <Box
@@ -146,15 +154,21 @@ const Page = ({params}) => {
             </Box>
             <Box>
               <Box>
-                <TextField
-                  id="outlined-multiline-static"
-                  label="发送消息"
-                  multiline
-                  rows={3}
-                  fullWidth
-                  value={message}
-                  onChange={handleChange}
-                />
+                <Box
+                  contentEditable
+                  style={{
+                    padding: 10,
+                    border: '1px solid #ccc',
+                    borderRadius: 5,
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    height: 150,
+                    overflowY: 'auto',
+                  }}
+                  ref={inputBoxRef}
+                  onInput={handleInput}
+                ></Box>
               </Box>
               <Box>
                 <Button variant="contained" 

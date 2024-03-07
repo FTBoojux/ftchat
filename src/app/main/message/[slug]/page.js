@@ -1,13 +1,13 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField, Snackbar } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
 import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
 
-const avatar_url = "http://47.98.97.181:9100/ftchat-avatar/a7388de6-c190-4edd-ae1d-4962cd2b1043.png"
+const maxImgSize = 3 * 1024 * 1024; // 3MB
 
 const Page = ({params}) => {
 
@@ -18,6 +18,8 @@ const Page = ({params}) => {
     // const [pageSize,setPageSize] = React.useState(20);
     const [messageList, setMessageList] = React.useState([]);
     const [message, setMessage] = React.useState("");
+    const [snackOpen, setSnackOpen] = React.useState(false);
+    const [snackMessage, setSnackMessage] = React.useState('');
     const cvsnBoxRef = React.useRef(null);
     const inputBoxRef = React.useRef(null);
     const ctx = useWebContext();
@@ -122,8 +124,28 @@ const Page = ({params}) => {
 
     const handleInput = (e) => {
       setMessage(inputBoxRef.current.innerHTML);
-      console.log(inputBoxRef.current.innerHTML);
     }
+
+    const handleBlur = (e) => {
+      setMessage(inputBoxRef.current.innerHTML);
+    }
+
+    const handlePaste = (event) => {
+      handleBlur();
+      const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+      for(let index in items){
+        const item = items[index];
+        console.log(item);
+        if(item.kind === 'file' && item.type.includes('image')){
+          const blob = item.getAsFile();
+          if(blob.size > maxImgSize){
+            setSnackOpen(true);
+            setSnackMessage('图片大小不能超过3MB');
+          }
+        }
+      }
+    }
+
     return (
         <Box
           sx={{
@@ -132,6 +154,14 @@ const Page = ({params}) => {
             height: '90vh',
           }}
         >
+          {/* <style>
+            {`
+              .inputBox img {
+                max-width: 100%;
+                height: auto;
+              }
+            `}
+          </style> */}
             <Box
                 sx={{
                   // width: '100%',
@@ -153,21 +183,31 @@ const Page = ({params}) => {
               ))}
             </Box>
             <Box>
-              <Box>
+              <Box
+                sx={{
+                  overflow: 'auto',
+                }}
+              >
                 <Box
                   contentEditable
-                  style={{
-                    padding: 10,
+                  className="inputBox"
+                  sx={{
+                    padding: 1,
                     border: '1px solid #ccc',
-                    borderRadius: 5,
+                    borderRadius: 2,
                     width: '100%',
                     boxSizing: 'border-box',
                     outline: 'none',
                     height: 150,
                     overflowY: 'auto',
+                    '& img': {
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }
                   }}
                   ref={inputBoxRef}
-                  onInput={handleInput}
+                  onBlur={handleBlur}
+                  onPaste={handlePaste}
                 ></Box>
               </Box>
               <Box>
@@ -177,6 +217,12 @@ const Page = ({params}) => {
                 >发送</Button>
               </Box>
             </Box>
+            <Snackbar
+              open={snackOpen}
+              autoHideDuration={6000}
+              onClose={() => setSnackOpen(false)}
+              message={snackMessage}
+            />
         </Box>
     );
 };

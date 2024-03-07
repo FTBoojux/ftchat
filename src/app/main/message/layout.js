@@ -75,6 +75,10 @@ export default function MessageLayout({
                     flexGrow: 2,
                     flexBasis: '69%', 
                     p: 3,
+                    overflowY: 'auto',
+                    maxWidth: '69vw',
+                    boxSizing: 'border-box',
+                    overflowX: 'hidden',
                 }}
             >
                 {children}

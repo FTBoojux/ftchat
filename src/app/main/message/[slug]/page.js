@@ -6,6 +6,7 @@ import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
 import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
+import { headers } from 'next/dist/client/components/headers';
 
 const maxImgSize = 3 * 1024 * 1024; // 3MB
 
@@ -77,7 +78,7 @@ const Page = ({params}) => {
       // 将新输入的消息保存到 localForage
       await localForage.setItem(conversation_id, newMessage);
     };
-    const handleSend = () => {
+    const handleSend = (message) => {
       // 发送消息
       console.log('send message', message);
       MyFetch(`/api/conversation/${conversation_id}/message/`, {
@@ -135,12 +136,26 @@ const Page = ({params}) => {
       const items = (event.clipboardData || event.originalEvent.clipboardData).items;
       for(let index in items){
         const item = items[index];
-        console.log(item);
         if(item.kind === 'file' && item.type.includes('image')){
           const blob = item.getAsFile();
           if(blob.size > maxImgSize){
             setSnackOpen(true);
-            setSnackMessage('图片大小不能超过3MB');
+            setSnackMessage('图片大小超过3MB,将改用文件上传');
+            const formData = new FormData();
+            formData.append('file', blob);
+            console.log('formData', blob);
+            MyFetch('/api/file/attachments/', {
+              method: 'POST',
+              body: formData
+            }).then(response=>response.json())
+            .then(data => {
+              console.log(data);
+              // inputBoxRef.current.innerHTML += `<img src="${data.data.url}" />`;
+              handleSend(`<img src="${data.data.url}" />`);
+            }).catch(error => {
+              console.log("?");
+              console.error(error);
+            })
           }
         }
       }
@@ -213,7 +228,7 @@ const Page = ({params}) => {
               <Box>
                 <Button variant="contained" 
                   style={{float: 'right'}}
-                  onClick={handleSend}
+                  onClick={()=>handleSend(message)}
                 >发送</Button>
               </Box>
             </Box>

@@ -12,6 +12,10 @@ export default async function MyFetch(url, options = {}) {
         defaultOptions.headers['Authorization'] = `Bearer ${token}`;
         defaultOptions.headers['mode'] = 'outer';
     }
+    if (options.body instanceof FormData) {
+        delete defaultOptions.headers['Content-Type']; // 删除Content-Type以让浏览器自动处理
+    }
+    
 
     return fetch(url, { ...defaultOptions, ...options });
 }

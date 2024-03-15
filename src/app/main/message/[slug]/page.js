@@ -20,6 +20,8 @@ const Page = ({params}) => {
     const [message, setMessage] = React.useState("");
     const [snackOpen, setSnackOpen] = React.useState(false);
     const [snackMessage, setSnackMessage] = React.useState('');
+    const [presigned_url, setPresignedUrl] = React.useState('');
+    const [isAtBottom, setIsAtBottom] = React.useState(true);
     const cvsnBoxRef = React.useRef(null);
     const inputBoxRef = React.useRef(null);
     const ctx = useWebContext();
@@ -28,8 +30,6 @@ const Page = ({params}) => {
         .then(() => {
           setTimeout(() => {  
             cvsnBoxRef.current.scrollTop = cvsnBoxRef.current.scrollHeight;
-            console.log('scrollHeight', cvsnBoxRef.current.scrollHeight);
-            console.log('scrollTop', cvsnBoxRef.current.scrollTop);
           },0)
         })
       ctx.setCurrentConversation(conversation_id);
@@ -46,6 +46,12 @@ const Page = ({params}) => {
         setMessageList([...messageList, ctx.lastMessage]);
       }
     }, [ctx.lastMessage])
+    React.useEffect(() => {
+      if (isAtBottom) {
+        cvsnBoxRef.current.scrollTop = cvsnBoxRef.current.scrollHeight - cvsnBoxRef.current.clientHeight;
+      }
+    }, [messageList]);
+
     const fetchMessageList = () => {
       return new Promise((resolve, reject) => {
         let url = `/api/conversation/${conversation_id}/message/`;
@@ -79,7 +85,6 @@ const Page = ({params}) => {
     };
     const handleSend = (message) => {
       // 发送消息
-      console.log('send message', message);
       MyFetch(`/api/conversation/${conversation_id}/message/`, {
         method: 'POST',
         body: JSON.stringify({
@@ -88,14 +93,12 @@ const Page = ({params}) => {
       })
       .then(response=>response.json())
       .then((data) => {
-        console.log(data);
         // 清空输入框
         setMessage('');
         inputBoxRef.current.innerHTML = '';
         // 清空 localForage 中保存的消息
         localForage.removeItem(conversation_id);
         if(data.result === 'success'){
-        console.log('message ctx', ctx);
           ctx.ws.send(JSON.stringify({
             type: 3,
             token: localStorage.getItem('access_token'),
@@ -105,11 +108,13 @@ const Page = ({params}) => {
 
       }).catch((error) => {
         console.error(error);
+        setMessage('');
       })
     }
 
     const handleScroll = (e) => {
       const target = e.target;
+      setIsAtBottom(target.scrollTop === target.scrollHeight - target.clientHeight);
       if(target.scrollTop === 0 && pagingState != null){
         const oldScrollHeight = cvsnBoxRef.current.scrollHeight
         fetchMessageList()
@@ -142,22 +147,34 @@ const Page = ({params}) => {
             setSnackMessage('图片大小超过3MB,将改用文件上传');
             const formData = new FormData();
             formData.append('file', blob);
-            console.log('formData', blob);
-            MyFetch('/api/file/attachments/', {
-              method: 'POST',
-              body: formData
-            }).then(response=>response.json())
-            .then(data => {
-              console.log(data);
-              // inputBoxRef.current.innerHTML += `<img src="${data.data.url}" />`;
-              handleSend(`<img src="${data.data.url}" />`);
-            }).catch(error => {
-              console.log("?");
+            MyFetch(`/api/file/presigned_url?filename=${blob.name}`,{
+              method: 'GET',
+            })
+            .then(response=>response.json())
+            .then(async (data) => {
+              const uploadResponse = await fetch(data.data.presigned_url, {
+                method: 'PUT',
+                body: blob, // Directly upload the file
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              if(uploadResponse.status === 200){
+                const {url} = uploadResponse
+                // 只保留 ？ 之前的部分
+                const index = url.indexOf('?');
+                const uploadUrl = url.slice(0, index);
+                handleSend(`<img src="${uploadUrl}" alt="${blob.name}" />`);                
+              }
+            })
+            .catch((error) => {
               console.error(error);
             })
+            ;
           }
         }
       }
+
     }
 
     return (
@@ -184,6 +201,10 @@ const Page = ({params}) => {
                   padding: 2,
                   boxSizing: 'border-box',
                   flexGrow: 1,
+                  '& img': {
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }
                 }}
                 onScroll={handleScroll}
                 ref={cvsnBoxRef}

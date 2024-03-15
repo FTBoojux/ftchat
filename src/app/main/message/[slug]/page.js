@@ -6,9 +6,8 @@ import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
 import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
-import { headers } from 'next/dist/client/components/headers';
 
-const maxImgSize = 3 * 1024 * 1024; // 3MB
+const maxImgSize = 1 * 1024 * 1024; // 3MB
 
 const Page = ({params}) => {
 
@@ -184,7 +183,7 @@ const Page = ({params}) => {
                   overflowY: 'auto',
                   padding: 2,
                   boxSizing: 'border-box',
-                  flexGrow: 1
+                  flexGrow: 1,
                 }}
                 onScroll={handleScroll}
                 ref={cvsnBoxRef}

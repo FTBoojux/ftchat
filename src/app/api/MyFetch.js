@@ -1,4 +1,3 @@
-import { tauri } from "@tauri-apps/api";
 export default async function MyFetch(url, options = {}) {
     const defaultOptions = {
         headers: {

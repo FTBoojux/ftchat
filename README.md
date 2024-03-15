@@ -8,6 +8,12 @@
 
 对应的实时聊天模块：[FTChat-channel](https://github.com/FTBoojux/ftchat-channel)
 
+当前计划任务：
+
+1.完成文件上传功能
+
+2.改造消息系统，分离消息内容与消息id
+
 以下内容为Next.js框架原生内容：
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

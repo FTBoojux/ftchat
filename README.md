@@ -123,3 +123,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2024-03-07
 1.现在支持在聊天消息中带有图片了
+
+### 2024-04-09
+1.初步支持文件上传功能

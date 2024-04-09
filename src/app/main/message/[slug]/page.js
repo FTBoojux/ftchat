@@ -6,6 +6,8 @@ import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
 import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import FileUploader from '../../../../../components/file/FileUploader';
 
 const maxImgSize = 1 * 1024 * 1024; // 3MB
 
@@ -83,6 +85,13 @@ const Page = ({params}) => {
       // 将新输入的消息保存到 localForage
       await localForage.setItem(conversation_id, newMessage);
     };
+    const clearMessage = ()=>{
+      // 清空输入框
+      setMessage('');
+      inputBoxRef.current.innerHTML = '';
+      // 清空 localForage 中保存的消息
+      localForage.removeItem(conversation_id);
+    }
     const handleSend = (message) => {
       // 发送消息
       MyFetch(`/api/conversation/${conversation_id}/message/`, {
@@ -93,9 +102,6 @@ const Page = ({params}) => {
       })
       .then(response=>response.json())
       .then((data) => {
-        // 清空输入框
-        setMessage('');
-        inputBoxRef.current.innerHTML = '';
         // 清空 localForage 中保存的消息
         localForage.removeItem(conversation_id);
         if(data.result === 'success'){
@@ -164,7 +170,8 @@ const Page = ({params}) => {
                 // 只保留 ？ 之前的部分
                 const index = url.indexOf('?');
                 const uploadUrl = url.slice(0, index);
-                handleSend(`<img src="${uploadUrl}" alt="${blob.name}" />`);                
+                handleSend(`<img src="${uploadUrl}" alt="${blob.name}" />`);
+                clearMessage();           
               }
             })
             .catch((error) => {
@@ -218,6 +225,12 @@ const Page = ({params}) => {
               ))}
             </Box>
             <Box>
+              <FileUploader 
+                sendMessage={handleSend}
+              />
+
+            </Box>
+            <Box>
               <Box
                 sx={{
                   overflow: 'auto',
@@ -248,7 +261,10 @@ const Page = ({params}) => {
               <Box>
                 <Button variant="contained" 
                   style={{float: 'right'}}
-                  onClick={()=>handleSend(message)}
+                  onClick={()=>{
+                    handleSend(message)
+                    clearMessage()
+                  }}
                 >发送</Button>
               </Box>
             </Box>

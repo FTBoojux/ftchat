@@ -92,12 +92,13 @@ const Page = ({params}) => {
       // 清空 localForage 中保存的消息
       localForage.removeItem(conversation_id);
     }
-    const handleSend = (message) => {
+    const handleSend = (message,type = 1) => {
       // 发送消息
       MyFetch(`/api/conversation/${conversation_id}/message/`, {
         method: 'POST',
         body: JSON.stringify({
           message: message,
+          type: type
         }),
       })
       .then(response=>response.json())

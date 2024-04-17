@@ -38,14 +38,13 @@ const FileUploader = (props)=>{
                             filename: file.name,
                         }
                         // message to json String
-                        
-                        props.sendMessage(JSON.stringify(message));
-                    }
-
-                    )
+                        props.sendMessage(JSON.stringify(message),2);
+                        fileInputRef.current.value = null;
+                    })
                 })
                 .catch((error)=>{
                     console.error(error);
+                    fileInputRef.current.value = null;
                 })
         }
     }

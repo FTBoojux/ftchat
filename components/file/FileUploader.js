@@ -11,14 +11,13 @@ const FileUploader = (props)=>{
 
 
     const handleFileChange = (e)=>{
-        console.log(e.target.files);
         const file = e.target.files[0];
         if(file){
             console.log(file);
             fetchFilePresignedUrl(file.name)
                 .then((data)=>{
-                    console.log(data);
-                    fetch(data.url, {
+                    console.log('fetchFilePresignedUrl',data);
+                    fetch(data.presigned_url, {
                         method: 'PUT',
                         body: file,
                         headers: {
@@ -29,9 +28,11 @@ const FileUploader = (props)=>{
                         if(response.status === 200){
                             console.log('上传成功');
                         }
-                        const {url} = response
+                        const url = data.presigned_url
+                        console.log(url);
                         // 只保留 ？ 之前的部分
                         const urlWithoutQuery = url.split('?')[0];
+                        console.log(urlWithoutQuery);
                         const message = {
                             type: file.type,
                             content: urlWithoutQuery,

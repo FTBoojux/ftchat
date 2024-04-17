@@ -1,6 +1,7 @@
 import { Avatar, Box, Typography } from '@mui/material';
-import DOMPurify from 'dompurify';
 import React from 'react';
+import TextMessageBox from './TextMessageBox';
+import FileInformationBox from './FileInformationBox';
 
 export default function MessageBubble({ message }) {
 
@@ -16,14 +17,20 @@ export default function MessageBubble({ message }) {
     const nowYear = now.getFullYear();
     const nowMonth = now.getMonth() + 1;
     const nowDay = now.getDate();
-    const nowHour = `0${now.getHours()}`.slice(-2);
-    const nowMinute = `0${now.getMinutes()}`.slice(-2);
     if (year === nowYear && month === nowMonth && day === nowDay) {
       return `${hour}:${minute}`;
     } else if (year === nowYear) {
       return `${month}-${day} ${hour}:${minute}`;
     } else {
       return `${year}-${month}-${day} ${hour}:${minute}`;
+    }
+  }
+
+  const MessageShower = ({message}) => {
+    if(message.message_type == 1){
+      return <TextMessageBox message={message}></TextMessageBox>
+    }else if(message.message_type == 2){
+      return <FileInformationBox message={message}></FileInformationBox>
     }
   }
 
@@ -61,32 +68,6 @@ export default function MessageBubble({ message }) {
             >
               {message.sender.username}
             </Avatar>
-            <Box>
-                {
-                    message.side === 'right' ?         
-                    <Box sx={{
-                        width: 0,
-                        height: 0,
-                        borderTop: '10px solid transparent',
-                        borderLeft: '20px solid',
-                        borderBottom: '10px solid transparent',
-                        color: 'primary.main',
-                        marginTop: '50%',
-                    }} />
-                    :
-                    <Box sx={{
-                        width: 0,
-                        height: 0,
-                        borderTop: '10px solid transparent',
-                        borderRight: '20px solid',
-                        borderBottom: '10px solid transparent',
-                        color: 'grey.300',
-                        marginTop: '50%',
-                    }} />
-                }
-                
-            </Box>
-
         </Box>
 
         <Box
@@ -111,7 +92,8 @@ export default function MessageBubble({ message }) {
                     variant="body2"
                     >{message.sender.username}</Typography>                
             </Box>
-            <Box
+            <MessageShower message={message} ></MessageShower>
+            {/* <Box
                 sx={{
                     p: 1,
                     pl: 2,
@@ -122,8 +104,7 @@ export default function MessageBubble({ message }) {
                 }}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }}
             >
-              {/* {message.content} */}
-            </Box>
+            </Box> */}
             <Box>
                 <Typography>
                     {/* {new Date(message.timestamp).toLocaleTimeString()} */}

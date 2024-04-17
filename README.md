@@ -126,3 +126,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2024-04-09
 1.初步支持文件上传功能
+
+### 2024-04-10
+1.修复了文件上传中url错误的问题
+2.为文件消息准备了专门的消息展示

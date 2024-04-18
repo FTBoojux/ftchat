@@ -19,7 +19,6 @@ const FONT_FILE_TYPE = "font/";
 export default function FileInformationBox({ message }) {
     const fileInfomation = JSON.parse(message.content);
     const FileIcon = () => {
-        console.log(fileInfomation);
         if (fileInfomation.type.startsWith(AUDIO_FILE_TYPE)) {
             return <AudioFileRoundedIcon />;
         }else if (fileInfomation.type.startsWith(IMAGE_FILE_TYPE)) {
@@ -34,23 +33,41 @@ export default function FileInformationBox({ message }) {
             return <AttachFileRoundedIcon />;
         } 
     }
+    const fileSizeCalc = (size) => {
+        if (size < 1024) {
+            return size + 'B';
+        } else if (size < 1024 * 1024) {
+            return (size / 1024).toFixed(2) + 'KB';
+        } else if (size < 1024 * 1024 * 1024) {
+            return (size / 1024 / 1024).toFixed(2) + 'MB';
+        } else {
+            return (size / 1024 / 1024 / 1024).toFixed(2) + 'GB';
+        }
+    }
     return <>
         <Box
             sx={{
                 p: 1,
                 pl: 2,
                 pr: 2,
-                bgcolor: 'grey.300',
+                bgcolor: message.side === 'right' ? 'primary.main' : 'grey.300',
                 color: message.side === 'right' ? 'primary.contrastText' : 'text.primary',
                 borderRadius: 1,
             }}
         >
             <a href={fileInfomation.content} download={fileInfomation.filename}>
                 <Box display={'flex'} >
-                    <FileIcon />
-                    <Typography >
-                    {fileInfomation.filename}
-                    </Typography >
+                    <Box>
+                        <FileIcon />
+                    </Box>
+                    <Box>
+                        <Typography >
+                            {fileInfomation.filename}
+                        </Typography >
+                        <Typography>
+                            {fileInfomation.size && fileSizeCalc(fileInfomation.size)}
+                        </Typography>
+                    </Box>
                 </Box>
 
             </a>

@@ -8,15 +8,11 @@ const FileUploader = (props)=>{
     
     const fileInputRef = React.useRef(null);
 
-
-
     const handleFileChange = (e)=>{
         const file = e.target.files[0];
         if(file){
-            console.log(file);
             fetchFilePresignedUrl(file.name)
                 .then((data)=>{
-                    console.log('fetchFilePresignedUrl',data);
                     fetch(data.presigned_url, {
                         method: 'PUT',
                         body: file,
@@ -29,14 +25,13 @@ const FileUploader = (props)=>{
                             console.log('上传成功');
                         }
                         const url = data.presigned_url
-                        console.log(url);
                         // 只保留 ？ 之前的部分
                         const urlWithoutQuery = url.split('?')[0];
-                        console.log(urlWithoutQuery);
                         const message = {
                             type: file.type,
                             content: urlWithoutQuery,
                             filename: file.name,
+                            size: file.size
                         }
                         // message to json String
                         props.sendMessage(JSON.stringify(message),2);

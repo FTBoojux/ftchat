@@ -228,6 +228,7 @@ const Page = ({params}) => {
             <Box>
               <FileUploader 
                 sendMessage={handleSend}
+                conversation_id={conversation_id}
               />
 
             </Box>

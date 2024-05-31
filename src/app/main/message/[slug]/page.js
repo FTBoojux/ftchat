@@ -149,9 +149,9 @@ const Page = ({params}) => {
         const item = items[index];
         if(item.kind === 'file' && item.type.includes('image')){
           const blob = item.getAsFile();
-          if(blob.size > maxImgSize){
-            setSnackOpen(true);
-            setSnackMessage('图片大小超过3MB,将改用文件上传');
+          // if(blob.size > maxImgSize){
+          //   setSnackOpen(true);
+          //   setSnackMessage('图片大小超过3MB,将改用文件上传');
             const formData = new FormData();
             formData.append('file', blob);
             MyFetch(`/api/file/presigned_url?filename=${blob.name}`,{
@@ -179,7 +179,7 @@ const Page = ({params}) => {
               console.error(error);
             })
             ;
-          }
+          // }
         }
       }
 

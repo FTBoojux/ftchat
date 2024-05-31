@@ -130,3 +130,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2024-04-10
 1.修复了文件上传中url错误的问题
 2.为文件消息准备了专门的消息展示
+
+### 2024-05-31
+1.文件粘贴统一选择文件消息
+2.优化文件消息预览

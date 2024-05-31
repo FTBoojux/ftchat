@@ -1,7 +1,7 @@
 import { Input } from "@mui/icons-material";
 import React from "react";
 import { fetchFilePresignedUrl } from "@/app/api/FileApi";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import MyFetch from "@/app/api/MyFetch";
 
@@ -78,9 +78,13 @@ const FileUploader = (props)=>{
                     onChange={handleFileChange}
                     style={{ display: 'none' }} 
                 />
-                <IconButton onClick={()=>handleIconClick()}>
-                    <UploadFileIcon />
-                </IconButton> 
+                <Tooltip title="上传文件">
+                    <IconButton 
+                        onClick={()=>handleIconClick()}
+                    >
+                        <UploadFileIcon />
+                    </IconButton> 
+                </Tooltip>
             </Box>
         </>
     )

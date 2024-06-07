@@ -134,3 +134,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### 2024-05-31
 1.文件粘贴统一选择文件消息
 2.优化文件消息预览
+
+### 2024-06-07
+1.增加了交互对话框组件

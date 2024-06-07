@@ -8,6 +8,7 @@ import localForage from 'localforage';
 import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FileUploader from '../../../../../components/file/FileUploader';
+import AlertDialog from '../../../../../components/tools/AlertDialog';
 
 const maxImgSize = 1 * 1024 * 1024; // 3MB
 
@@ -24,6 +25,7 @@ const Page = ({params}) => {
     const [snackMessage, setSnackMessage] = React.useState('');
     const [presigned_url, setPresignedUrl] = React.useState('');
     const [isAtBottom, setIsAtBottom] = React.useState(true);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
     const cvsnBoxRef = React.useRef(null);
     const inputBoxRef = React.useRef(null);
     const ctx = useWebContext();
@@ -152,8 +154,6 @@ const Page = ({params}) => {
           // if(blob.size > maxImgSize){
           //   setSnackOpen(true);
           //   setSnackMessage('图片大小超过3MB,将改用文件上传');
-            const formData = new FormData();
-            formData.append('file', blob);
             MyFetch(`/api/file/presigned_url?filename=${blob.name}`,{
               method: 'GET',
             })
@@ -180,7 +180,7 @@ const Page = ({params}) => {
             })
             ;
           // }
-        }
+        }else{}
       }
 
     }
@@ -230,7 +230,6 @@ const Page = ({params}) => {
                 sendMessage={handleSend}
                 conversation_id={conversation_id}
               />
-
             </Box>
             <Box>
               <Box
@@ -270,6 +269,13 @@ const Page = ({params}) => {
                 >发送</Button>
               </Box>
             </Box>
+            <AlertDialog
+              handleAgree = {()=>{console.log("agree");}}
+              handleDisagree = {()=>{}}
+              openState = {{open: dialogOpen, setOpen: setDialogOpen}}
+              title="title"
+              discription="discription"
+            />
             <Snackbar
               open={snackOpen}
               autoHideDuration={6000}

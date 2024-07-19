@@ -15,3 +15,21 @@ export const fetchFilePresignedUrl = (filename) => {
         });
     });
 }
+
+export const saveFileInformation = (file, url, conversation_id) => {
+    MyFetch('/api/file/attachment_v2/', {
+        method: 'POST',
+        body: JSON.stringify({
+            file_name: file.name,
+            file_size: file.size,
+            file_type: file.type,
+            file_url: url,
+            conversation_id: conversation_id
+        })
+    })
+    .then((data)=>{
+    })
+    .catch((error)=>{
+        console.error(error);
+    })
+}

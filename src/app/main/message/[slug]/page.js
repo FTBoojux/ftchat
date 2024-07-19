@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, TextField, Snackbar } from '@mui/material';
+import { Box, Button, TextField, Snackbar, CircularProgress } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
@@ -9,7 +9,8 @@ import { WebSocketContext, useWebContext } from '@/app/WebSocketContext';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FileUploader from '../../../../../components/file/FileUploader';
 import AlertDialog from '../../../../../components/tools/AlertDialog';
-
+import { fetchFilePresignedUrl, saveFileInformation } from '@/app/api/FileApi';
+import CircularProgressWithLabel from '../../../../../components/tools/CircularProgressWithLabel';
 const maxImgSize = 1 * 1024 * 1024; // 3MB
 
 const Page = ({params}) => {
@@ -26,8 +27,10 @@ const Page = ({params}) => {
     const [presigned_url, setPresignedUrl] = React.useState('');
     const [isAtBottom, setIsAtBottom] = React.useState(true);
     const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [tempFile, setTempFile] = React.useState(null);
     const cvsnBoxRef = React.useRef(null);
     const inputBoxRef = React.useRef(null);
+    const [fileUploadProgress, setFileUploadProgress] = React.useState(0);
     const ctx = useWebContext();
     React.useEffect(() => {
       fetchMessageList()
@@ -74,7 +77,6 @@ const Page = ({params}) => {
             setPagingState(data.data.paging_state);
           }
           resolve()
-          // console.log(messageList);
         }).catch((error) => {
           console.error(error);
           reject()
@@ -180,9 +182,65 @@ const Page = ({params}) => {
             })
             ;
           // }
-        }else{}
+        }else if(item.kind === 'file'){
+          setDialogOpen(true);
+          setTempFile(item.getAsFile());
+        }
       }
+    }
 
+    const handleAgree = () => {
+      if(tempFile){
+        handleFileUpload(tempFile);
+        setDialogOpen(false);
+      }
+    }
+
+    const handleFileUpload = (file) =>{
+      fetchFilePresignedUrl(file.name)
+        .then((data)=>{
+          uploadFileWithProgress(file, data.presigned_url)
+          .then(()=>{
+            const urlWithoutQuery = data.presigned_url.split('?')[0];
+            const message = {
+              type: file.type,
+              content: urlWithoutQuery,
+              filename: file.name,
+              size: file.size
+            }
+            handleSend(JSON.stringify(message),2);
+            saveFileInformation(file, urlWithoutQuery, conversation_id);
+          })
+          .catch((error)=>{
+            console.error(error);
+          })
+          
+        })
+    }
+
+    const uploadFileWithProgress = (file, presigned_url) => {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', presigned_url, true);
+        xhr.upload.onprogress = (e) => {
+          if(e.lengthComputable){
+            const percent = Math.round((e.loaded / e.total) * 100);
+            console.log("percent",percent);
+            setFileUploadProgress(percent);
+          }
+        };
+        xhr.onloadend = () => {
+          if(xhr.status === 200){
+            resolve();
+          }else{
+            reject();
+          }
+        };
+        xhr.onerror = (e) => {
+          reject(e);
+        };
+        xhr.send(file);
+      })
     }
 
     return (
@@ -270,12 +328,17 @@ const Page = ({params}) => {
               </Box>
             </Box>
             <AlertDialog
-              handleAgree = {()=>{console.log("agree");}}
+              handleAgree = {handleAgree}
               handleDisagree = {()=>{}}
               openState = {{open: dialogOpen, setOpen: setDialogOpen}}
-              title="title"
-              discription="discription"
+              title="上传文件"
+              discription="将粘贴的文件上传到当前会话?"
+              agreeText="上传"
+              disagreeText="取消"
             />
+            {/* {fileUploadProgress > 0 && fileUploadProgress < 100 && ( */}
+              <CircularProgressWithLabel value={fileUploadProgress} />
+            {/* )} */}
             <Snackbar
               open={snackOpen}
               autoHideDuration={6000}

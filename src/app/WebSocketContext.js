@@ -21,7 +21,7 @@ export const WebSocketProvider = ({ children }) => {
   const updateConversation = (conversation,conversations = []) => {
     const newConversations = conversations.map((item) => {
       if(conversation.conversation_id === item.conversation_id){
-        return { ...item, last_message: conversation.content };
+        return { ...item, last_message: conversation.message_type == 2 ? "[文件消息]" : conversation.content };
       }
       return item;
     });

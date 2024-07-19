@@ -137,3 +137,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### 2024-06-07
 1.增加了交互对话框组件
+
+### 2024-07-19
+1.修复了文件消息错误的问题

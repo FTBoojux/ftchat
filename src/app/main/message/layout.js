@@ -26,63 +26,64 @@ export default function MessageLayout({
         router.push(`/main/message/${conversation.conversation_id}`)
     }
 
-  return(
-    <Box>
-        <Box sx={{ 
-            display: 'flex' ,
-            // height: '100%',
-            width: '100%',
-            }}>
-            <Box
-                component="nav"
-                sx={{
-                    flexGrow: 1,
-                    flexBasis: '30%',
-                    overflow: 'hidden',
-                    maxWidth: '30vw',
-                }}
-            >
-                <List>
-                    {
-                    ctx.conversations && ctx.conversations.map((conversation,index) => {
-                        return (
-                        <ListItem 
-                            key={index}
-                            onClick={() => conversationClick(conversation)}
-                            >
-                            <ListItemAvatar>
-                            <Avatar alt={conversation.conversation_name} src={conversation.conversation_avatar} />
-                            </ListItemAvatar>
-                            <ListItemText 
-                                primary={conversation.conversation_name} 
-                                secondary={conversation.last_message.replace(/<img[^>]*>/g, '[图片]')} 
-                                sx={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            />
-                        </ListItem>
-                        )
-                    })
-                }
-                </List>
-            </Box>
-            <Divider orientation="vertical" flexItem  />
-            <Box 
-                component="main" 
-                sx={{ 
-                    flexGrow: 2,
-                    flexBasis: '69%', 
-                    p: 3,
-                    overflowY: 'auto',
-                    maxWidth: '69vw',
-                    boxSizing: 'border-box',
-                    overflowX: 'hidden',
-                }}
-            >
-                {children}
-            </Box>
+    return(
+        <Box>
+            <Box sx={{ 
+                display: 'flex' ,
+                // height: '100%',
+                width: '100%',
+                }}>
+                <Box
+                    component="nav"
+                    sx={{
+                        flexGrow: 1,
+                        flexBasis: '30%',
+                        overflow: 'hidden',
+                        maxWidth: '30vw',
+                    }}
+                >
+                    <List>
+                        {
+                            ctx.conversations && ctx.conversations.map((conversation,index) => {
+                                return (
+                                    <ListItem 
+                                        key={index}
+                                        onClick={() => conversationClick(conversation)}
+                                    >
+                                        <ListItemAvatar>
+                                            <Avatar alt={conversation.conversation_name} src={conversation.conversation_avatar} />
+                                        </ListItemAvatar>
+                                        <ListItemText 
+                                            primary={conversation.conversation_name} 
+                                            // secondary={conversation.last_message.replace(/<img[^>]*>/g, '[图片]')} 
+                                            secondary={conversation.last_message}
+                                            sx={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}
+                                        />
+                                    </ListItem>
+                                )
+                            })
+                        }
+                    </List>
+                </Box>
+                <Divider orientation="vertical" flexItem  />
+                <Box 
+                    component="main" 
+                    sx={{ 
+                        flexGrow: 2,
+                        flexBasis: '69%', 
+                        p: 3,
+                        overflowY: 'auto',
+                        maxWidth: '69vw',
+                        boxSizing: 'border-box',
+                        overflowX: 'hidden',
+                    }}
+                >
+                    {children}
+                </Box>
         </Box>
 
     </Box>

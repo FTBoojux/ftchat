@@ -1,6 +1,6 @@
 import { Input } from "@mui/icons-material";
 import React from "react";
-import { fetchFilePresignedUrl } from "@/app/api/FileApi";
+import { fetchFilePresignedUrl, saveFileInformation } from "@/app/api/FileApi";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import MyFetch from "@/app/api/MyFetch";
@@ -36,7 +36,7 @@ const FileUploader = (props)=>{
                         }
                         // message to json String
                         props.sendMessage(JSON.stringify(message),2);
-                        saveFileInformation(file,urlWithoutQuery);
+                        saveFileInformation(file, urlWithoutQuery, props.conversation_id);
                         fileInputRef.current.value = null;
                     })
                 })
@@ -51,23 +51,7 @@ const FileUploader = (props)=>{
         fileInputRef.current.click();
     }
 
-    const saveFileInformation = (file,url)=>{
-        MyFetch('/api/file/attachment_v2/', {
-            method: 'POST',
-            body: JSON.stringify({
-                file_name: file.name,
-                file_size: file.size,
-                file_type: file.type,
-                file_url: url,
-                conversation_id: props.conversation_id
-            })
-        })
-        .then((data)=>{
-        })
-        .catch((error)=>{
-            console.error(error);
-        })
-    }
+
 
     return (
         <>

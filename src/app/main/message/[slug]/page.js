@@ -11,6 +11,7 @@ import FileUploader from '../../../../../components/file/FileUploader';
 import AlertDialog from '../../../../../components/tools/AlertDialog';
 import { fetchFilePresignedUrl, saveFileInformation } from '@/app/api/FileApi';
 import CircularProgressWithLabel from '../../../../../components/tools/CircularProgressWithLabel';
+import axios from 'axios';
 const maxImgSize = 1 * 1024 * 1024; // 3MB
 
 const Page = ({params}) => {
@@ -32,6 +33,10 @@ const Page = ({params}) => {
     const inputBoxRef = React.useRef(null);
     const [fileUploadProgress, setFileUploadProgress] = React.useState(0);
     const ctx = useWebContext();
+    React.useEffect((e) => {
+      console.log(e);
+      
+    }, [tempFile])
     React.useEffect(() => {
       fetchMessageList()
         .then(() => {
@@ -221,27 +226,60 @@ const Page = ({params}) => {
     const uploadFileWithProgress = (file, presigned_url) => {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append('file', file);
         xhr.open('PUT', presigned_url, true);
-        xhr.upload.onprogress = (e) => {
-          if(e.lengthComputable){
-            const percent = Math.round((e.loaded / e.total) * 100);
+        xhr.upload.onprogress = function(event) {
+          if(event.lengthComputable){
+            const percent = Math.round((event.loaded / event.total) * 100);
             console.log("percent",percent);
             setFileUploadProgress(percent);
           }
-        };
-        xhr.onloadend = () => {
-          if(xhr.status === 200){
-            resolve();
-          }else{
-            reject();
+        }
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(xhr.responseText); // Resolve with the response text
           }
         };
         xhr.onerror = (e) => {
           reject(e);
         };
-        xhr.send(file);
+        xhr.send(formData);
       })
     }
+
+    const uploadFileWithProgressByFetch = (file, presigned_url) => {
+      fetch(presigned_url, {
+        method: 'PUT',
+        body: file,
+        onprogress: (e) => {
+          console.log('progress',e);
+          
+          if(e.lengthComputable){
+            const percent = Math.round((e.loaded / e.total) * 100);
+            console.log("percent",percent);
+            setFileUploadProgress(percent);
+          }
+        }
+      })
+    }
+
+    const uploadFileWithProgressByAxios = (file, presigned_url) => {
+      const config = {
+        onprogress: (progressEvent) => {
+          const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          console.log("percent",percent);
+          setFileUploadProgress(percent);
+        }
+      }
+      axios.put(presigned_url, file, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    } 
 
     return (
         <Box
@@ -286,6 +324,7 @@ const Page = ({params}) => {
             <Box>
               <FileUploader 
                 sendMessage={handleSend}
+                fileUploadFunc = {handleFileUpload}
                 conversation_id={conversation_id}
               />
             </Box>
@@ -336,9 +375,9 @@ const Page = ({params}) => {
               agreeText="上传"
               disagreeText="取消"
             />
-            {/* {fileUploadProgress > 0 && fileUploadProgress < 100 && ( */}
+            {fileUploadProgress > 0 && fileUploadProgress < 100 && (
               <CircularProgressWithLabel value={fileUploadProgress} />
-            {/* )} */}
+            )} 
             <Snackbar
               open={snackOpen}
               autoHideDuration={6000}

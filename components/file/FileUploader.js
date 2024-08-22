@@ -12,38 +12,39 @@ const FileUploader = (props)=>{
     const handleFileChange = (e)=>{
         const file = e.target.files[0];
         if(file){
-            fetchFilePresignedUrl(file.name)
-                .then((data)=>{
-                    fetch(data.presigned_url, {
-                        method: 'PUT',
-                        body: file,
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                    .then((response)=>{
-                        if(response.status === 200){
-                            console.log('上传成功');
-                        }
-                        const url = data.presigned_url
-                        // 只保留 ？ 之前的部分
-                        const urlWithoutQuery = url.split('?')[0];
-                        const message = {
-                            type: file.type,
-                            content: urlWithoutQuery,
-                            filename: file.name,
-                            size: file.size
-                        }
-                        // message to json String
-                        props.sendMessage(JSON.stringify(message),2);
-                        saveFileInformation(file, urlWithoutQuery, props.conversation_id);
-                        fileInputRef.current.value = null;
-                    })
-                })
-                .catch((error)=>{
-                    console.error(error);
-                    fileInputRef.current.value = null;
-                })
+            // fetchFilePresignedUrl(file.name)
+            //     .then((data)=>{
+            //         fetch(data.presigned_url, {
+            //             method: 'PUT',
+            //             body: file,
+            //             headers: {
+            //                 'Content-Type': 'multipart/form-data'
+            //             }
+            //         })
+            //         .then((response)=>{
+            //             if(response.status === 200){
+            //                 console.log('上传成功');
+            //             }
+            //             const url = data.presigned_url
+            //             // 只保留 ？ 之前的部分
+            //             const urlWithoutQuery = url.split('?')[0];
+            //             const message = {
+            //                 type: file.type,
+            //                 content: urlWithoutQuery,
+            //                 filename: file.name,
+            //                 size: file.size
+            //             }
+            //             // message to json String
+            //             props.sendMessage(JSON.stringify(message),2);
+            //             saveFileInformation(file, urlWithoutQuery, props.conversation_id);
+            //             fileInputRef.current.value = null;
+            //         })
+            //     })
+            //     .catch((error)=>{
+            //         console.error(error);
+            //         fileInputRef.current.value = null;
+            //     })
+            props.fileUploadFunc(file)
         }
     }
 

@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, TextField, Snackbar, CircularProgress } from '@mui/material';
+import { Box, Button, TextField, Snackbar, CircularProgress, Tooltip, IconButton } from '@mui/material';
 import MessageBubble from '../../../../../components/message/MessageBubble';
 import MyFetch from '@/app/api/MyFetch';
 import localForage from 'localforage';
@@ -12,6 +12,8 @@ import AlertDialog from '../../../../../components/tools/AlertDialog';
 import { fetchFilePresignedUrl, saveFileInformation } from '@/app/api/FileApi';
 import CircularProgressWithLabel from '../../../../../components/tools/CircularProgressWithLabel';
 import axios from 'axios';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import { WebviewWindow } from '@tauri-apps/api/window';
 const maxImgSize = 1 * 1024 * 1024; // 3MB
 
 const Page = ({params}) => {
@@ -248,38 +250,11 @@ const Page = ({params}) => {
       })
     }
 
-    const uploadFileWithProgressByFetch = (file, presigned_url) => {
-      fetch(presigned_url, {
-        method: 'PUT',
-        body: file,
-        onprogress: (e) => {
-          console.log('progress',e);
-          
-          if(e.lengthComputable){
-            const percent = Math.round((e.loaded / e.total) * 100);
-            console.log("percent",percent);
-            setFileUploadProgress(percent);
-          }
-        }
+    const messageListCilck = (e) => {
+      const webView = new WebviewWindow('历史记录',{
+        url: '/window/chatHistory'        
       })
     }
-
-    const uploadFileWithProgressByAxios = (file, presigned_url) => {
-      const config = {
-        onprogress: (progressEvent) => {
-          const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          console.log("percent",percent);
-          setFileUploadProgress(percent);
-        }
-      }
-      axios.put(presigned_url, file, config)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-    } 
 
     return (
         <Box
@@ -321,12 +296,19 @@ const Page = ({params}) => {
                   />
               ))}
             </Box>
-            <Box>
+            <Box
+            display={'flex'}
+            >
               <FileUploader 
                 sendMessage={handleSend}
                 fileUploadFunc = {handleFileUpload}
                 conversation_id={conversation_id}
               />
+              <Tooltip title="消息记录">
+                <IconButton onClick={(e)=>messageListCilck(e)} >
+                  <MessageOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
             <Box>
               <Box

@@ -64,10 +64,10 @@ const FileUploader = (props)=>{
                     style={{ display: 'none' }} 
                 />
                 <Tooltip title="上传文件">
-                    <IconButton 
-                        onClick={()=>handleIconClick()}
-                    >
-                        <UploadFileIcon />
+                    <IconButton>
+                        <UploadFileIcon
+                            onClick={()=>handleIconClick()}
+                        />
                     </IconButton> 
                 </Tooltip>
             </Box>

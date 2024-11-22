@@ -252,7 +252,9 @@ const Page = ({params}) => {
 
     const messageListCilck = (e) => {
       const webView = new WebviewWindow('历史记录',{
-        url: '/window/chatHistory'        
+        url: `/window/chatHistory?conversation_id=${conversation_id}`,
+        width: 600,
+        height: 600,     
       })
     }
 

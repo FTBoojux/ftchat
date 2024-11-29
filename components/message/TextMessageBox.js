@@ -11,8 +11,14 @@ export default function TextMessageBox({message}) {
                 bgcolor: message.side === 'right' ? 'primary.main' : 'grey.300',
                 color: message.side === 'right' ? 'primary.contrastText' : 'text.primary',
                 borderRadius: 1,
+                '& em': {  // Add styles for em tags
+                    backgroundColor: 'yellow',
+                    fontStyle: 'normal',
+                    padding: '0 2px',
+                }
             }}
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }}
+            
         >
             {/* {message.content} */}
         </Box>

@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { TextField, Select, MenuItem, Box, List, ListItem, ListItemText } from '@mui/material';
+import { TextField, Select, MenuItem, Box, List, ListItem, ListItemText, Button } from '@mui/material';
 import MyFetch from "@/app/api/MyFetch";
+import TextMessageBox from "../../../../components/message/TextMessageBox";
 
 export default function History(props) {
   const [conversation_id, setConversation_id] = React.useState(null);
@@ -54,7 +55,7 @@ export default function History(props) {
           const messageData = item._source.data;
           return {
             id: messageData.message_id,
-            content: messageData.content,
+            content: item.highlight ? item.highlight['data.content'][0] : messageData.content,
             timestamp: messageData.timestamp,
             sender_id: messageData.sender_id,
             highlight: item.highlight ? item.highlight['data.content'][0] : '',
@@ -98,6 +99,7 @@ export default function History(props) {
           <MenuItem value="file">文件</MenuItem>
           <MenuItem value="image">图片</MenuItem>
         </Select>
+        <Button onClick={() => fetchHistory(true)}>搜索</Button>
       </Box>
       <Box
         ref={listRef}
@@ -107,7 +109,7 @@ export default function History(props) {
         <List>
           {history.map((item, index) => (
             <ListItem key={index}>
-              <ListItemText primary={item.content} secondary={item.timestamp} />
+              <TextMessageBox message={{side:"left",content:item.content}} />
             </ListItem>
           ))}
         </List>

@@ -8,6 +8,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { selectChatMessage } from "@/app/api/SqliteService";
 const drawerWidth = 40;
 
 const MainLayout = ({
@@ -94,6 +95,13 @@ const MainLayout = ({
             }
           }
           saveWs(webSocket)
+          selectChatMessage(1).then((data) => {
+            console.log('sql-data', data);
+            
+          })
+          .catch((error) => {
+            console.error('Error:', error);}
+          )
         }
         return () => {
           if(ws !== null) {

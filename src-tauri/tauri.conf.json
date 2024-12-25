@@ -2,64 +2,45 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:3000",
-    "distDir": "../out"
+    "devUrl": "http://localhost:3000",
+    "frontendDist": "../out"
   },
-  "package": {
-    "productName": "ftchat",
-    "version": "0.1.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": true
-    },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.ftchat.dev",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
-    },
+  "identifier": "com.boojux.ftchat",
+  "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
-        "fullscreen": false,
+        "title": "ftchat",
+        "width": 800,
         "height": 600,
         "resizable": true,
-        "title": "ftchat",
-        "width": 800
+        "fullscreen": false
       }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost",
+      "capabilities":[
+        {
+          "identifier": "main",
+          "windows": ["*"],
+          "permissions": ["sql:default","sql:allow-execute"]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "../.icons/32x32.png",
+      "../.icons/128x128.png",
+      "../.icons/128x128@2x.png",
+      "../.icons/icon.icns"
     ]
-  }
+  },
+  "plugins":{
+    "sql": {
+      "preload": ["sqlite:mydatabase.db"]
+    }
+  } 
 }
